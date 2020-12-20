@@ -1,0 +1,87 @@
+const express = require('express');
+const session = require('express-session');
+const morgan = require('morgan');
+const passport = require('passport');
+
+const { sequelize } = require('./src/models/index');
+const sessionConfig = require('./config/session');
+const passportconfig = require('./config/passport.config');
+
+const {
+  authRoutes,
+  // productRoutes,
+  // showRoutes,
+  // brandRoutes,
+  // buyRoutes,
+  // paymentRoutes,
+  // searchRoutes,
+  // orderRoutes,
+  // cartRoutes,
+  // profileRoutes,
+  // verfiyRoutes,
+  // newletterRoutes,
+} = require('./src/routes');
+
+const app = express();
+
+if (process.env.NODE_ENV !== 'production') require('dotenv').config();
+
+/**
+ *   Adding middlewares
+ * */
+
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: false, limit: '25mb' }));
+app.use(session(sessionConfig));
+app.use(passport.initialize());
+passportconfig(passport);
+app.use(passport.session());
+
+// mogran logging
+
+app.use(
+  morgan(function (tokens, req, res) {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      '-',
+      tokens['response-time'](req, res),
+      'ms',
+    ].join(' ');
+  })
+);
+
+/**
+ *   Testing database connection
+ * */
+
+try {
+  sequelize.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
+}
+
+/**
+ * init Router
+ */
+
+app.use('/api/auth', authRoutes);
+
+/* ***************************** */
+
+app.use((err, req, res, next) => {
+  if (err.message) {
+    res.status(500).json({ Error: err.message });
+  } else {
+    res.status(500).json({ Error: err });
+  }
+
+  next();
+});
+
+const Port = process.env.PORT;
+app.listen(Port, () =>
+  console.log(`Server running on http://localhost:${Port}`)
+);
