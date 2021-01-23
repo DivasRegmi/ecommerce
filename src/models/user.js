@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     mobile: DataTypes.BIGINT,
     address: DataTypes.STRING,
     oauthid: DataTypes.STRING,
-    favlist: DataTypes.STRING,
   });
 
   User.associate = (models) => {
@@ -31,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       as: 'cart',
     });
-    User.belongsToMany(models.Product, { through: 'FavList' });
+    User.belongsToMany(models.Product, { through: 'FavList', as: 'favList' });
     User.hasMany(models.Order, {
       foreignKey: {
         name: 'userID',

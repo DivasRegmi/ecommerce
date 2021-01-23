@@ -1,40 +1,25 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Orders', {
+    await queryInterface.createTable('Reviews', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userId: {
+      rating: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId',
+        validate: {
+          min: 0,
+          max: 5,
         },
       },
-      cartId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Carts',
-          key: 'id',
-          as: 'cartId',
-        },
-      },
-      cost: {
-        type: Sequelize.INTEGER,
-      },
-      mobileNumber: {
-        type: Sequelize.INTEGER,
-      },
-      location: {
+      comment: {
         type: Sequelize.STRING,
       },
-      status: {
+
+      reply: {
         type: Sequelize.STRING,
-        defaultValue: 'pending',
       },
       createdAt: {
         allowNull: false,
@@ -44,9 +29,25 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      productId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Products',
+          key: 'id',
+          as: 'productId',
+        },
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'userId',
+        },
+      },
     });
   },
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Orders');
+    await queryInterface.dropTable('Reviews');
   },
 };

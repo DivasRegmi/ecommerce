@@ -1,10 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
   const Cart = sequelize.define('Cart', {
     userId: DataTypes.NUMBER,
-    ProductIdArr: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
-    quantityArr: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [] },
+    ProductIdArr: {
+      type: DataTypes.STRING,
+    },
+    quantityArr: {
+      type: DataTypes.STRING,
+    },
     cost: DataTypes.NUMBER,
-    status: DataTypes.BOOLEAN,
     noOfItem: DataTypes.NUMBER,
   });
 

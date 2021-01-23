@@ -9,28 +9,31 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
-      category: {
-        type: Sequelize.STRING,
-      },
+
       costprice: {
         type: Sequelize.INTEGER,
       },
       markedprice: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       discription: {
+        type: Sequelize.TEXT,
+      },
+
+      brand: {
         type: Sequelize.STRING,
       },
+
       image: {
         type: Sequelize.STRING,
       },
       rating: {
         type: Sequelize.INTEGER,
       },
-      isPopular: {
-        type: Sequelize.BOOLEAN,
-      },
+
       favCount: {
         type: Sequelize.INTEGER,
       },
@@ -44,6 +47,14 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+      },
+      categoryId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Categories',
+          key: 'id',
+          as: 'categoryId',
+        },
       },
     });
   },

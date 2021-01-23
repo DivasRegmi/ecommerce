@@ -8,13 +8,11 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     comment: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: [],
+      type: DataTypes.STRING,
     },
 
     reply: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: [],
+      type: DataTypes.STRING,
     },
   });
   Review.associate = (models) => {

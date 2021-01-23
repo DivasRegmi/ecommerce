@@ -25,9 +25,6 @@ module.exports = {
       oauthid: {
         type: Sequelize.STRING,
       },
-      favlist: {
-        type: Sequelize.STRING,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

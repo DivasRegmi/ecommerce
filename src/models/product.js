@@ -5,17 +5,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
-    imageUrls: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      defaultValue: [],
-      get: function () {
-        if (this.getDataValue('imageUrls').length === 0) {
-          return ['/defaultproduct.jpg'];
-        }
-        return this.getDataValue('imageUrls');
-      },
-    },
-    category: DataTypes.STRING,
+    imageUrls: DataTypes.STRING,
+    categoryId: DataTypes.NUMBER,
     costprice: {
       type: DataTypes.NUMBER,
       allowNull: false,
@@ -43,9 +34,14 @@ module.exports = (sequelize, DataTypes) => {
         name: 'categoryId',
         allowNull: false,
       },
-      as: 'category',
+      as: 'product',
     });
-    Product.belongsToMany(models.User, { through: 'FavList' });
+
+    Product.belongsToMany(models.User, {
+      through: 'FavList',
+      as: 'favList',
+    });
+
     Product.hasMany(models.Review, {
       foreignKey: {
         name: 'productId',
