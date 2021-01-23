@@ -1,11 +1,11 @@
 const {
-   renderSearchPage,
-   fetchSearchResultInPage ,
-   autoSuggestionFetch
-} = require('./display')
+  renderSearchPage,
+  fetchSearchResultInPage,
+  autoSuggestionFetch,
+} = require('./display');
 
 module.exports = {
-    renderSearchPage,
-    fetchSearchResultInPage,
-    autoSuggestionFetch
-}
+  renderSearchPage,
+  fetchSearchResultInPage,
+  autoSuggestionFetch,
+};

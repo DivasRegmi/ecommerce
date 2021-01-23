@@ -5,7 +5,7 @@ const { sequelize } = require('../src/models/index');
 
 const store = new SequelizeStore({
   db: sequelize,
-  checkExpirationInterval: 1000 * 60 * 60 * 24 * 7,
+  checkExpirationInterval: 1000 * 60 * 5, // 5-min
 });
 
 const secret = () => {

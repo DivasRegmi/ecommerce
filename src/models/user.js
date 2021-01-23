@@ -23,7 +23,22 @@ module.exports = (sequelize, DataTypes) => {
     favlist: DataTypes.STRING,
   });
 
-  // User.assosiate = (models) => {};
+  User.associate = (models) => {
+    User.belongsTo(models.Product, {
+      foreignKey: {
+        name: 'productId',
+        allowNull: false,
+      },
+      as: 'review',
+    });
+    User.belongsTo(models.User, {
+      foreignKey: {
+        name: 'userId',
+        allowNull: false,
+      },
+      as: 'review',
+    });
+  };
 
   return User;
 };

@@ -51,16 +51,16 @@ module.exports = (passport) => {
   );
 
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, { id: user.id, isAdmin: user.isAdmin });
   });
 
-  passport.deserializeUser((id, done) => {
-    // if (Admin) {
-    Admin.findByPk(id).then((admin) => {
-      if (!admin) {
-        User.findByPk(id).then((user) => done(null, user));
-      }
-      return done(null, admin);
-    });
+  passport.deserializeUser((user, done) => {
+    if (user.isAdmin) {
+      Admin.findByPk(user.id).then((admin) => {
+        return done(null, admin);
+      });
+    } else {
+      User.findByPk(user.id).then((userData) => done(null, userData));
+    }
   });
 };

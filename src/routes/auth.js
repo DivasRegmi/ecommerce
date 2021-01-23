@@ -5,8 +5,10 @@ const { adminMethods, userMethods } = require('../controllers/auth');
 const { isAdmin, isAuth } = require('../middlewares/auth');
 
 router.get('/logout', (req, res) => {
-  req.logOut();
-  res.status(200).json({ message: 'logout successfully' });
+  req.session.destroy(function () {
+    res.clearCookie('session');
+    res.redirect('/');
+  });
 });
 
 // google
@@ -56,8 +58,7 @@ router.post('/loginAdmin', (req, res, next) => {
 });
 
 router.get('/getAdmin', isAuth, (req, res) => {
-  console.log(req.user);
-  res.json(req.user);
+  res.json({ user: req.user, session: req.session });
 });
 
 module.exports = router;
