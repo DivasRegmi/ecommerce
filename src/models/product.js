@@ -45,7 +45,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       as: 'category',
     });
-    Product.belongsToMany(models.Cart, { through: 'ProductCard' });
     Product.belongsToMany(models.User, { through: 'FavList' });
     Product.hasMany(models.Review, {
       foreignKey: {
