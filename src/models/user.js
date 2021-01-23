@@ -28,9 +28,13 @@ module.exports = (sequelize, DataTypes) => {
         name: 'userID',
         allowNull: false,
       },
-      as: 'cart',
     });
-    User.belongsToMany(models.Product, { through: 'FavList', as: 'favList' });
+
+    User.belongsToMany(models.Product, {
+      through: 'FavList',
+      as: 'favList',
+    });
+
     User.hasMany(models.Order, {
       foreignKey: {
         name: 'userID',

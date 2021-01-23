@@ -48,12 +48,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      categoryId: {
+      categorieId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Categories',
           key: 'id',
-          as: 'categoryId',
+          as: 'categorieId',
         },
       },
     });

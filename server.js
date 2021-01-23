@@ -7,21 +7,6 @@ const { sequelize } = require('./src/models/index');
 const sessionConfig = require('./config/session');
 const passportconfig = require('./config/passport.config');
 
-const {
-  authRoutes,
-  // productRoutes,
-  // showRoutes,
-  // brandRoutes,
-  // buyRoutes,
-  // paymentRoutes,
-  // searchRoutes,
-  // orderRoutes,
-  // cartRoutes,
-  // profileRoutes,
-  // verfiyRoutes,
-  // newletterRoutes,
-} = require('./src/routes');
-
 const app = express();
 
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
@@ -67,7 +52,7 @@ try {
  * init Router
  */
 
-app.use('/api/auth', authRoutes);
+app.use('/api', require('./src/routes'));
 
 /* ***************************** */
 

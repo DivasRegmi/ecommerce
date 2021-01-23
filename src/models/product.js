@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     imageUrls: DataTypes.STRING,
-    categoryId: DataTypes.NUMBER,
+    categorieId: DataTypes.NUMBER,
     costprice: {
       type: DataTypes.NUMBER,
       allowNull: false,
@@ -29,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Product.associate = (models) => {
-    Product.belongsTo(models.Category, {
+    Product.belongsTo(models.Categorie, {
       foreignKey: {
-        name: 'categoryId',
+        name: 'categorieId',
         allowNull: false,
       },
       as: 'product',
@@ -47,7 +47,6 @@ module.exports = (sequelize, DataTypes) => {
         name: 'productId',
         allowNull: 'false',
       },
-      as: 'review',
     });
   };
 

@@ -21,14 +21,12 @@ module.exports = (sequelize, DataTypes) => {
         name: 'productId',
         allowNull: false,
       },
-      as: 'review',
     });
     Review.belongsTo(models.User, {
       foreignKey: {
         name: 'userId',
         allowNull: false,
       },
-      as: 'review',
     });
   };
   return Review;

@@ -1,26 +1,17 @@
-const authRoutes = require('./auth');
-// const productRoutes = require('./product');
-// const showRoutes = require('./showRoutes');
-// const buyRoutes = require('./buy');
-// const brandRoutes = require('./brand');
-// const searchRoutes = require('./search');
-// const paymentRoutes = require('./payment');
-// const orderRoutes = require('./order');
-// const cartRoutes = require('./cart');
-// const profileRoutes = require('./profile');
-// const verfiyRoutes = require('./verify');
-// const newletterRoutes = require('./newsletter');
-module.exports = {
-  authRoutes,
-  //   productRoutes,
-  //   showRoutes,
-  //   brandRoutes,
-  //   buyRoutes,
-  //   searchRoutes,
-  //   paymentRoutes,
-  //   orderRoutes,
-  //   cartRoutes,
-  //   verfiyRoutes,
-  //   profileRoutes,
-  //   newletterRoutes,
-};
+const router = require('express').Router();
+
+module.exports = router;
+
+router.use('/auth', require('./auth'));
+router.use('/product', require('./product'));
+// router.use('/review', require('./review'));
+// router.use('/tag', require('./tag'));
+// router.use('/user', require('./user'));
+// router.use('/address', require('./address'));
+// router.use('/billing', require('./billing'));
+
+// Make sure this is after all of
+// the registered routes!
+router.use(function (req, res) {
+  res.status(404).end();
+});
