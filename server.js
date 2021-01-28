@@ -56,14 +56,13 @@ app.use('/api', require('./src/routes'));
 
 /* ***************************** */
 
-app.use((err, req, res, next) => {
-  if (err.message) {
-    res.status(500).json({ Error: err.message });
-  } else {
-    res.status(500).json({ Error: err });
-  }
-
-  next();
+app.use((err, req, res) => {
+  console.log('from Next');
+  console.error(err);
+  console.error(err.stack);
+  res
+    .status(err.status || 500)
+    .send({ err: err.message || 'Internal server error.' });
 });
 
 const Port = process.env.PORT;

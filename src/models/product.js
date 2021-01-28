@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 module.exports = (sequelize, DataTypes) => {
   const Product = sequelize.define('Product', {
     name: {
@@ -5,20 +6,19 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
-    imageUrls: DataTypes.STRING,
-    categorieId: DataTypes.NUMBER,
-    costprice: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-      validate: {
-        min: 0,
+
+    imageArray: {
+      type: DataTypes.STRING,
+      get() {
+        const rawValue = this.getDataValue('imageArray');
+        return rawValue ? rawValue.split(',') : null;
       },
     },
-    markedprice: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-      validate: {
-        min: 0,
+    highlights: {
+      type: DataTypes.STRING,
+      get() {
+        const rawValue = this.getDataValue('highlights');
+        return rawValue ? rawValue.split(',') : null;
       },
     },
     brand: DataTypes.STRING,
@@ -26,17 +26,38 @@ module.exports = (sequelize, DataTypes) => {
     rating: DataTypes.NUMBER,
     favCount: DataTypes.NUMBER,
     isOutOfStock: DataTypes.NUMBER,
+    costPrice: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      validate: {
+        min: 0,
+      },
+    },
+    markedPrice: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      validate: {
+        min: 0,
+      },
+    },
+    discountPercent: {
+      type: DataTypes.NUMBER,
+    },
+    seelingPrice: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        const mp = parseInt(this.getDataValue('markedPrice'), 10);
+        const dp = parseInt(this.getDataValue('discountPercent'), 10);
+        const sp = mp - (dp / 100) * mp;
+        return sp;
+      },
+      set() {
+        throw new Error('Do not try to set the `fullName` value!');
+      },
+    },
   });
 
   Product.associate = (models) => {
-    Product.belongsTo(models.Categorie, {
-      foreignKey: {
-        name: 'categorieId',
-        allowNull: false,
-      },
-      as: 'product',
-    });
-
     Product.belongsToMany(models.User, {
       through: 'FavList',
       as: 'favList',
@@ -45,6 +66,13 @@ module.exports = (sequelize, DataTypes) => {
     Product.hasMany(models.Review, {
       foreignKey: {
         name: 'productId',
+        allowNull: 'false',
+      },
+    });
+
+    Product.belongsTo(models.SubCategorie, {
+      foreignKey: {
+        name: 'subCategorieId',
         allowNull: 'false',
       },
     });

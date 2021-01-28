@@ -15,7 +15,7 @@ module.exports = {
           as: 'userId',
         },
       },
-      ProductIdArr: {
+      productIdArr: {
         type: Sequelize.STRING,
       },
       quantityArr: {

@@ -12,28 +12,31 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-
-      costprice: {
-        type: Sequelize.INTEGER,
-      },
-      markedprice: {
-        type: Sequelize.INTEGER,
-      },
       discription: {
         type: Sequelize.TEXT,
       },
-
+      highlights: {
+        type: Sequelize.STRING,
+      },
       brand: {
         type: Sequelize.STRING,
       },
+      costPrice: {
+        type: Sequelize.INTEGER,
+      },
+      markedPrice: {
+        type: Sequelize.INTEGER,
+      },
+      discountPercent: {
+        type: Sequelize.INTEGER,
+      },
 
-      image: {
+      imageArray: {
         type: Sequelize.STRING,
       },
       rating: {
         type: Sequelize.INTEGER,
       },
-
       favCount: {
         type: Sequelize.INTEGER,
       },
@@ -48,12 +51,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      categorieId: {
+      subCategorieId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Categories',
+          model: 'SubCategories',
           key: 'id',
-          as: 'categorieId',
+          as: 'subCategorieId',
         },
       },
     });

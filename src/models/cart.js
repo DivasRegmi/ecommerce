@@ -1,11 +1,19 @@
 module.exports = (sequelize, DataTypes) => {
   const Cart = sequelize.define('Cart', {
     userId: DataTypes.NUMBER,
-    ProductIdArr: {
+    productIdArr: {
       type: DataTypes.STRING,
+      get() {
+        const rawValue = this.getDataValue(ProductIdArr);
+        return rawValue ? rawValue.split(',') : null;
+      },
     },
     quantityArr: {
       type: DataTypes.STRING,
+      get() {
+        const rawValue = this.getDataValue(quantityArr);
+        return rawValue ? rawValue.split(',') : null;
+      },
     },
     cost: DataTypes.NUMBER,
     noOfItem: DataTypes.NUMBER,

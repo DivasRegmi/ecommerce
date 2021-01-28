@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": "12.16.3"
+  },
   "scripts": {
     "start": "nodemon server",
+    "db": "sequelize db:drop && sequelize db:create",
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "lint": "eslint ."
   },
@@ -16,6 +20,7 @@
     "express-session": "^1.17.1",
     "helmet": "^4.2.0",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "mysql2": "^2.2.5",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
