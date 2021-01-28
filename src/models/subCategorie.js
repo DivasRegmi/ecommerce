@@ -1,6 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
   const SubCategorie = sequelize.define('SubCategorie', {
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
   });
 
   SubCategorie.associate = (models) => {
@@ -10,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
-    SubCategorie.belongsTo(models.Categories, {
+    SubCategorie.belongsTo(models.Categorie, {
       foreignKey: {
-        name: 'subCategorieId',
+        name: 'categorieId',
         allowNull: false,
       },
     });

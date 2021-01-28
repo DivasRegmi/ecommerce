@@ -1,12 +1,16 @@
 module.exports = (sequelize, DataTypes) => {
   const Categorie = sequelize.define('Categorie', {
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
   });
 
   Categorie.associate = (models) => {
     Categorie.hasMany(models.SubCategorie, {
       foreignKey: {
-        name: 'subCategorieId',
+        name: 'categorieId',
         allowNull: false,
       },
     });
