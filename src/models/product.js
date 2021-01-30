@@ -1,7 +1,6 @@
-const { log } = require('console');
 const fs = require('fs');
 const path = require('path');
-const productImageSavingLocation = require('../../config/config');
+const { productImageSavingLocation } = require('../../config/config');
 
 /* eslint-disable no-undef */
 module.exports = (sequelize, DataTypes) => {
@@ -69,6 +68,8 @@ module.exports = (sequelize, DataTypes) => {
           const images = product.imageArray;
 
           for (let i = 0; i < images.length; i++) {
+            console.log(productImageSavingLocation, images[i]);
+
             const filePath = path.join(productImageSavingLocation, images[i]);
             fs.unlinkSync(filePath, (err) => {
               console.log(err);

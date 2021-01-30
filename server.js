@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const passport = require('passport');
 
@@ -15,8 +16,8 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').config();
  *   Adding middlewares
  * */
 
-app.use(express.json({ limit: '25mb' }));
-app.use(express.urlencoded({ extended: false, limit: '25mb' }));
+app.use(bodyParser.json({ limit: '25mb' }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '25mb' }));
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 passportconfig(passport);

@@ -7,20 +7,18 @@ const { Op } = Sequelize;
 
 router.param('productId', function (req, res, next, productId) {
   Product.findOne({
-    where: {
-      id: productId,
-    },
+    where: { id: productId },
     include: [Review],
   })
     .then((product) => {
-      if (product) {
-        req.product = product;
-        next();
-        return null;
+      if (!product) {
+        const error = new Error('Product not found');
+        error.status = 404;
+        throw error;
       }
-      const error = new Error('some message');
-      error.status = 404;
-      throw error;
+      req.product = product;
+      next();
+      return null;
     })
     .catch(next);
 });
@@ -75,7 +73,7 @@ router.get('/:productId', (req, res) => {
   res.send(req.product);
 });
 
-router.post('/:productId', upload.array('pro_images'), (req, res, next) => {
+router.post('/', upload.array('pro_images'), (req, res, next) => {
   const {
     name,
     subCategorie,
