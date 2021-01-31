@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Review, Product, Categorie, SubCategorie } = require('../../models');
+const { Categorie, SubCategorie } = require('../../models');
 
 router.param('categorieId', function (req, res, next, categorieId) {
   Categorie.findByPk(categorieId)

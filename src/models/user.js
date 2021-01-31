@@ -32,7 +32,8 @@ module.exports = (sequelize, DataTypes) => {
 
     User.belongsToMany(models.Product, {
       through: 'FavList',
-      as: 'favList',
+      as: 'favLists',
+      foreignKey: 'userId',
     });
 
     User.hasMany(models.Order, {

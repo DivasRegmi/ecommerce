@@ -2,7 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const { adminMethods, userMethods } = require('../../controllers/auth');
 
-const { isAdmin, isAuth } = require('../../middlewares/auth');
+const { isAuth } = require('../../middlewares/auth');
 
 router.get('/logout', (req, res) => {
   req.session.destroy(function () {
@@ -11,7 +11,7 @@ router.get('/logout', (req, res) => {
   });
 });
 
-// google
+// google log in for user
 router.get(
   '/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
@@ -23,7 +23,7 @@ router.get(
   userMethods.oauthCallback
 );
 
-// facebook
+// facebook login for user
 router.get(
   '/facebook',
   passport.authenticate('facebook', { scope: ['email'] })

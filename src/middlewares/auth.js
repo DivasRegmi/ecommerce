@@ -1,5 +1,3 @@
-const bcrypt = require('bcryptjs');
-const user = require('../controllers/auth/user');
 const { Admin } = require('../models');
 
 const isAdmin = (req, res, next) => {

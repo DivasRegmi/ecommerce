@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 /**
  *   Adding middlewares
  * */
+app.disable('x-powered-by');
 
 app.use(bodyParser.json({ limit: '25mb' }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '25mb' }));
@@ -57,13 +58,12 @@ app.use('/api', require('./src/routes'));
 
 /* ***************************** */
 
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   console.log('from Next');
   console.error(err);
   console.error(err.stack);
-  res
-    .status(err.status || 500)
-    .send({ err: err.message || 'Internal server error.' });
+  res.status(500).send({ err: err.message || 'Internal server error.' });
 });
 
 const Port = process.env.PORT;

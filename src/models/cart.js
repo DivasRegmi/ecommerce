@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 module.exports = (sequelize, DataTypes) => {
   const Cart = sequelize.define('Cart', {
     userId: DataTypes.NUMBER,
     productIdArr: {
       type: DataTypes.STRING,
       get() {
-        const rawValue = this.getDataValue(ProductIdArr);
+        const rawValue = this.getDataValue(productIdArr);
         return rawValue ? rawValue.split(',') : null;
       },
     },

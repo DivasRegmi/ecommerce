@@ -5,9 +5,8 @@ module.exports = router;
 router.use('/auth', require('./auth'));
 router.use('/product', require('./product'));
 router.use('/categorie', require('./categorie_subCategorie'));
-// router.use('/review', require('./review'));
-// router.use('/tag', require('./tag'));
-// router.use('/user', require('./user'));
+router.use('/review', require('./review'));
+router.use('/user', require('./user'));
 // router.use('/address', require('./address'));
 // router.use('/billing', require('./billing'));
 

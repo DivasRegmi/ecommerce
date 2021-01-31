@@ -15,16 +15,28 @@ const oauthCreateUser = (profile, done) => {
 
   User.findOne({
     where: {
-      oauthid: profile.id,
+      email: userCrediential.email,
     },
   })
-    .then((user) => {
-      if (user) {
-        done(null, user);
+    .then((userByEmail) => {
+      if (userByEmail) {
+        done(null, userByEmail);
       } else {
-        User.create(userCrediential).then((newUser) => {
-          done(null, newUser);
-        });
+        User.findOne({
+          where: {
+            oauthid: profile.id,
+          },
+        })
+          .then((userById) => {
+            if (userById) {
+              done(null, userById);
+            } else {
+              User.create(userCrediential).then((newUser) => {
+                done(null, newUser);
+              });
+            }
+          })
+          .catch(() => done(null, false));
       }
     })
     .catch(() => done(null, false));

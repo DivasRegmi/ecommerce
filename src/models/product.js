@@ -66,14 +66,12 @@ module.exports = (sequelize, DataTypes) => {
       hooks: {
         afterDestroy: (product) => {
           const images = product.imageArray;
-
           for (let i = 0; i < images.length; i++) {
-            console.log(productImageSavingLocation, images[i]);
-
             const filePath = path.join(productImageSavingLocation, images[i]);
+
             fs.unlinkSync(filePath, (err) => {
-              console.log(err);
-              console.log(images[i], 'deleted');
+              if (err) return console.log(err);
+              console.log('file deleted successfully');
             });
           }
         },
@@ -84,7 +82,8 @@ module.exports = (sequelize, DataTypes) => {
   Product.associate = (models) => {
     Product.belongsToMany(models.User, {
       through: 'FavList',
-      as: 'favList',
+      as: 'favLists',
+      foreignKey: 'productId',
     });
 
     Product.hasMany(models.Review, {
@@ -92,6 +91,7 @@ module.exports = (sequelize, DataTypes) => {
         name: 'productId',
         allowNull: 'false',
       },
+      as: 'reviews',
     });
 
     Product.belongsTo(models.SubCategorie, {

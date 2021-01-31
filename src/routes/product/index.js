@@ -8,7 +8,15 @@ const { Op } = Sequelize;
 router.param('productId', function (req, res, next, productId) {
   Product.findOne({
     where: { id: productId },
-    include: [Review],
+    attributes: {
+      include: [
+        [Sequelize.fn('COUNT', Sequelize.col('reviews.userId')), 'n_ratting'],
+      ],
+    },
+    include: {
+      model: Review,
+      as: 'reviews',
+    },
   })
     .then((product) => {
       if (!product) {
@@ -39,7 +47,10 @@ router.get('/search/', function (req, res, next) {
     where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('name')), {
       [Op.like]: `%${req.query.name || ''}%`,
     }),
-    include: [Review],
+    include: {
+      model: Review,
+      as: 'reviews',
+    },
   })
     .then(function (products) {
       if (!products) {
