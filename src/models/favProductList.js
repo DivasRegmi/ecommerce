@@ -1,13 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
-  const FavList = sequelize.define(
-    'FavList',
+  const FavProductList = sequelize.define(
+    'FavProductList',
     {
       userId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       productId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
@@ -21,5 +21,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return FavList;
+  return FavProductList;
 };

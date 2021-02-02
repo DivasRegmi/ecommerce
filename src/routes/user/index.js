@@ -1,8 +1,5 @@
 const router = require('express').Router();
-const { json } = require('body-parser');
-const { use } = require('passport');
-const user = require('../../controllers/auth/user');
-const { User, Product, FavList } = require('../../models');
+const { User, Product, FavProductList } = require('../../models');
 
 // Get all users
 router.get('/', (req, res, next) => {
@@ -13,8 +10,8 @@ router.get('/', (req, res, next) => {
     },
     include: {
       model: Product,
-      as: 'favLists',
-      attributes: ['name', 'id'],
+      as: 'favProductList',
+      attributes: ['name', 'rating', 'seelingPrice', 'imageArray'],
       through: { attributes: [] },
     },
   })
@@ -72,12 +69,12 @@ router.param('userId', (req, res, next, userId) => {
 });
 
 router.get('/:userId', function (req, res) {
-  res.send(req.userInfo.getFavLists());
+  res.send(req.userInfo.getFavProductList());
 });
 
 router.post('/addFav/:productId', async (req, res, next) => {
   if (req.user) {
-    FavList.create({
+    FavProductList.create({
       userId: req.user.id,
       productId: req.params.productId,
     })

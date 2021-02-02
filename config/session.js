@@ -8,7 +8,7 @@ const store = new SequelizeStore({
   expiration: 1000 * 60 * 60 * 24 * 14, // The maximum age (in milliseconds) of a valid session.
 });
 
-// store.sync();
+store.sync();
 
 module.exports = {
   name: 'session',

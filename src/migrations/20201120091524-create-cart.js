@@ -17,16 +17,7 @@ module.exports = {
           as: 'userId',
         },
       },
-      productIdArr: {
-        type: Sequelize.STRING,
-      },
-      quantityArr: {
-        type: Sequelize.STRING,
-      },
       cost: {
-        type: Sequelize.INTEGER,
-      },
-      noOfItem: {
         type: Sequelize.INTEGER,
       },
       createdAt: {

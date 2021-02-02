@@ -81,8 +81,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Product.associate = (models) => {
     Product.belongsToMany(models.User, {
-      through: 'FavList',
-      as: 'favLists',
+      through: 'FavProductList',
+      as: 'favProductList',
       foreignKey: 'productId',
     });
 

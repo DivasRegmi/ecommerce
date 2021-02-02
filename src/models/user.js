@@ -1,26 +1,42 @@
 // const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
+  const User = sequelize.define(
+    'User',
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
       },
-    },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      validate: {
-        isEmail: true,
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        validate: {
+          isEmail: true,
+        },
       },
+      provider: DataTypes.STRING,
+      mobile: DataTypes.BIGINT,
+      address: DataTypes.STRING,
+      oauthid: DataTypes.STRING,
     },
-    provider: DataTypes.STRING,
-    mobile: DataTypes.BIGINT,
-    address: DataTypes.STRING,
-    oauthid: DataTypes.STRING,
-  });
+    {
+      hooks: {
+        afterCreate: (user, options) => {
+          const { transaction } = options;
+
+          const Cart = sequelize.models.cart;
+
+          Cart.create({ userId: user.id }, { transaction }).catch((err) =>
+            console.error(err)
+          );
+        },
+      },
+    }
+  );
 
   User.associate = (models) => {
     User.hasOne(models.Cart, {
@@ -31,8 +47,8 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.belongsToMany(models.Product, {
-      through: 'FavList',
-      as: 'favLists',
+      through: 'FavProductList',
+      as: 'favProductList',
       foreignKey: 'userId',
     });
 
