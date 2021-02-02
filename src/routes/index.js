@@ -7,7 +7,7 @@ router.use('/product', require('./product'));
 router.use('/categorie', require('./categorie_subCategorie'));
 router.use('/review', require('./review'));
 router.use('/user', require('./user'));
-router.use('/user/cart', require('./cart'));
+router.use('/cart', require('./cart'));
 // router.use('/address', require('./address'));
 // router.use('/billing', require('./billing'));
 

@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Categorie.associate = (models) => {
     Categorie.hasMany(models.SubCategorie, {
+      onDelete: 'cascade',
       foreignKey: {
         name: 'categorieId',
         allowNull: false,

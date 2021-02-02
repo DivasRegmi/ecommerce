@@ -93,6 +93,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Product.hasMany(models.Review, {
+      onDelete: 'cascade',
       foreignKey: {
         name: 'productId',
         allowNull: 'false',

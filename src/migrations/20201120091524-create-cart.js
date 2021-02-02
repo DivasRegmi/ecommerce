@@ -17,7 +17,7 @@ module.exports = {
           as: 'userId',
         },
       },
-      cost: {
+      totalCost: {
         type: Sequelize.INTEGER,
       },
       createdAt: {

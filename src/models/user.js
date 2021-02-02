@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         afterCreate: (user, options) => {
           const { transaction } = options;
 
-          const Cart = sequelize.models.cart;
+          const { Cart } = sequelize.models;
 
           Cart.create({ userId: user.id }, { transaction }).catch((err) =>
             console.error(err)
@@ -53,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.hasMany(models.Order, {
+      onDelete: 'cascade',
       foreignKey: {
         name: 'userId',
         allowNull: false,

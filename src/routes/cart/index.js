@@ -17,14 +17,14 @@ router.param('cartId', (req, res, next, cartId) => {
     .catch(next);
 });
 
-// // Get all reviews
-// router.get('/', (req, res, next) => {
-//   Cart.findAll({ where: req.query })
-//     .then(function (reviews) {
-//       res.send(reviews);
-//     })
-//     .catch(next);
-// });
+// Get all carts
+router.get('/', (req, res, next) => {
+  Cart.findAll({ where: req.query })
+    .then(function (carts) {
+      res.send(carts);
+    })
+    .catch(next);
+});
 
 // router.get('/rating/:productId', (req, res, next) => {
 //   Review.findAll({
