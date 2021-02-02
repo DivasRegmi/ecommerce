@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = (models) => {
     User.hasOne(models.Cart, {
       foreignKey: {
-        name: 'userID',
+        name: 'userId',
         allowNull: false,
       },
     });
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
 
     User.hasMany(models.Order, {
       foreignKey: {
-        name: 'userID',
+        name: 'userId',
         allowNull: false,
       },
       as: 'order',

@@ -1,23 +1,12 @@
 /* eslint-disable no-undef */
 module.exports = (sequelize, DataTypes) => {
   const Cart = sequelize.define('Cart', {
-    userId: DataTypes.NUMBER,
-    productIdArr: {
-      type: DataTypes.STRING,
-      get() {
-        const rawValue = this.getDataValue(productIdArr);
-        return rawValue ? rawValue.split(',') : null;
-      },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
     },
-    quantityArr: {
-      type: DataTypes.STRING,
-      get() {
-        const rawValue = this.getDataValue(quantityArr);
-        return rawValue ? rawValue.split(',') : null;
-      },
-    },
-    cost: DataTypes.NUMBER,
-    noOfItem: DataTypes.NUMBER,
+    totalCost: DataTypes.INTEGER,
   });
 
   Cart.associate = (models) => {
@@ -27,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       as: 'cart',
+    });
+
+    Cart.belongsToMany(models.Product, {
+      through: 'CartProduct',
+      as: 'cartProducts',
+      foreignKey: 'cartId',
     });
   };
 

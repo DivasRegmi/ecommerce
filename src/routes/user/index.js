@@ -1,5 +1,8 @@
 const router = require('express').Router();
-const { User, sequelize, Product } = require('../../models');
+const { json } = require('body-parser');
+const { use } = require('passport');
+const user = require('../../controllers/auth/user');
+const { User, Product, FavList } = require('../../models');
 
 // Get all users
 router.get('/', (req, res, next) => {
@@ -11,7 +14,8 @@ router.get('/', (req, res, next) => {
     include: {
       model: Product,
       as: 'favLists',
-      // through: sequelize.models.FavList,
+      attributes: ['name', 'id'],
+      through: { attributes: [] },
     },
   })
     .then(function (users) {
@@ -68,7 +72,20 @@ router.param('userId', (req, res, next, userId) => {
 });
 
 router.get('/:userId', function (req, res) {
-  res.send(req.userInfo);
+  res.send(req.userInfo.getFavLists());
+});
+
+router.post('/addFav/:productId', async (req, res, next) => {
+  if (req.user) {
+    FavList.create({
+      userId: req.user.id,
+      productId: req.params.productId,
+    })
+      .then(() => res.status(200).send('done'))
+      .catch((err) => next(err));
+  } else {
+    res.send(401);
+  }
 });
 
 router.put('/:userId', function (req, res, next) {

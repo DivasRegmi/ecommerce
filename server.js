@@ -43,12 +43,15 @@ app.use(
  *   Testing database connection
  * */
 
-try {
-  sequelize.authenticate();
-  console.log('Connection has been established successfully.');
-} catch (error) {
-  console.error('Unable to connect to the database:', error);
-}
+(async () => {
+  try {
+    // await sequelize.sync();
+    sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+})();
 
 /**
  * init Router
@@ -60,10 +63,9 @@ app.use('/api', require('./src/routes'));
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.log('from Next');
   console.error(err);
   console.error(err.stack);
-  res.status(500).send({ err: err.message || 'Internal server error.' });
+  res.status(500).send({ error: err.message || 'Internal server error.' });
 });
 
 const Port = process.env.PORT;

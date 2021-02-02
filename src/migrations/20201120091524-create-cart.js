@@ -9,6 +9,8 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        unique: true,
         references: {
           model: 'Users',
           key: 'id',

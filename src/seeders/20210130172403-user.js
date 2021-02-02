@@ -11,8 +11,8 @@ module.exports = {
           mobile: null,
           address: null,
           oauthid: '195939848872395',
-          createdAt: '2021-01-30T17:22:59.000Z',
-          updatedAt: '2021-01-30T17:22:59.000Z',
+          createdAt: '2021-01-30 21:15:05',
+          updatedAt: '2021-01-30 21:15:05',
         },
       ],
       {}

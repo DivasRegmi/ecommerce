@@ -8,7 +8,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       rating: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.NUMBER,
         validate: {
           min: 0,
           max: 5,

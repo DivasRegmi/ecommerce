@@ -9,13 +9,13 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        userId: {
+        cartId: {
           type: Sequelize.INTEGER,
           allowNull: false,
           references: {
-            model: 'Users',
+            model: 'Carts',
             key: 'id',
-            as: 'userId',
+            as: 'cartId',
           },
         },
         productId: {
@@ -26,6 +26,15 @@ module.exports = {
             key: 'id',
             as: 'productId',
           },
+        },
+        quantity: {
+          type: Sequelize.INTEGER,
+          validation: {
+            min: 1,
+          },
+        },
+        total: {
+          type: Sequelize.INTEGER,
         },
         createdAt: {
           allowNull: false,
@@ -39,7 +48,7 @@ module.exports = {
       {
         uniqueKeys: {
           actions_unique: {
-            fields: ['userId', 'productId'],
+            fields: ['cartId', 'productId'],
           },
         },
       }
