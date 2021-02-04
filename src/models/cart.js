@@ -6,6 +6,25 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    total: {
+      type: DataTypes.VIRTUAL,
+      allowNull: false,
+      defaultValue: 0,
+      get() {
+        const products = this.getDataValue('cartProducts');
+
+        let total = 0;
+        if (products) {
+          products.forEach((product) => {
+            total += product.CartProduct.total;
+          });
+        }
+        return total;
+      },
+      set() {
+        throw new Error('Do not try to set the `total` value!');
+      },
+    },
   });
 
   Cart.associate = (models) => {

@@ -39,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
 
       costPrice: {
         type: DataTypes.NUMBER,
-        allowNull: false,
         validate: {
           min: 0,
         },
@@ -63,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
           return sp;
         },
         set() {
-          throw new Error('Do not try to set the `fullName` value!');
+          throw new Error('Do not try to set the `seelingPrice` value!');
         },
       },
     },

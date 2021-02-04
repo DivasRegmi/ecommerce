@@ -18,6 +18,7 @@ module.exports = {
           as: 'userId',
         },
       },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

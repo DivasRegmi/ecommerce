@@ -1,12 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define('Order', {
-    userId: DataTypes.NUMBER,
-    cartId: DataTypes.STRING,
-    cost: DataTypes.NUMBER,
-    mobileNumber: DataTypes.NUMBER,
-    location: DataTypes.STRING,
-    status: {
+    userId: DataTypes.INTEGER,
+    cartId: DataTypes.INTEGER,
+    mobileNumber: {
+      type: DataTypes.BIGINT(11),
+      allowNull: false,
+      validate: {
+        is: /^98\d{8}$/i,
+      },
+    },
+    location: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.ENUM('complete', 'pending'),
       defaultValue: 'pending',
     },
   });
@@ -15,10 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     Order.belongsTo(models.User, {
       onDelete: 'cascade',
       foreignKey: {
-        name: 'userID',
+        name: 'userId',
         allowNull: false,
       },
-      as: 'order',
+      as: 'user',
     });
     Order.belongsTo(models.Cart, {
       onDelete: 'cascade',

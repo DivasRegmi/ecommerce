@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
         name: 'userId',
         allowNull: false,
       },
-      as: 'order',
+      as: 'orders',
     });
   };
 

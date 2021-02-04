@@ -1,4 +1,4 @@
-const getTotal = async (cartProduct, sequelize) => {
+const getProductTotal = async (cartProduct, sequelize) => {
   const { Product } = sequelize.models;
 
   try {
@@ -46,10 +46,10 @@ module.exports = (sequelize, DataTypes) => {
 
       hooks: {
         afterCreate: (cartProduct) => {
-          getTotal(cartProduct, sequelize);
+          getProductTotal(cartProduct, sequelize);
         },
         afterUpdate: (cartProduct) => {
-          getTotal(cartProduct, sequelize);
+          getProductTotal(cartProduct, sequelize);
         },
       },
     }

@@ -8,8 +8,7 @@ router.use('/categorie', require('./categorie_subCategorie'));
 router.use('/review', require('./review'));
 router.use('/user', require('./user'));
 router.use('/cart', require('./cart'));
-// router.use('/address', require('./address'));
-// router.use('/billing', require('./billing'));
+router.use('/order', require('./order'));
 
 // Make sure this is after all of
 // the registered routes!

@@ -28,6 +28,7 @@ module.exports = {
       },
       markedPrice: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
       discountPercent: {
         type: Sequelize.INTEGER,

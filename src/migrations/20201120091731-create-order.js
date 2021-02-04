@@ -23,17 +23,16 @@ module.exports = {
           as: 'cartId',
         },
       },
-      cost: {
-        type: Sequelize.INTEGER,
-      },
       mobileNumber: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT(11),
+        allowNull: false,
       },
       location: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('complete', 'pending'),
         defaultValue: 'pending',
       },
       createdAt: {
