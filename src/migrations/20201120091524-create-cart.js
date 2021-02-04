@@ -5,6 +5,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        onDelete: 'CASCADE',
         type: Sequelize.INTEGER,
       },
       userId: {
@@ -16,9 +17,6 @@ module.exports = {
           key: 'id',
           as: 'userId',
         },
-      },
-      totalCost: {
-        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,

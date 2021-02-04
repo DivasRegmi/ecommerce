@@ -1,98 +1,151 @@
 const router = require('express').Router();
 
-const { Cart } = require('../../models');
+const { Cart, Product, CartProduct } = require('../../models');
 
-router.param('cartId', (req, res, next, cartId) => {
-  Cart.findByPk(cartId)
-    .then((cart) => {
-      if (cart) {
-        req.cart = cart;
-        next();
-        return null;
-      }
-      const error = new Error('Review not found by Id');
-      error.status = 404;
-      throw error;
-    })
-    .catch(next);
-});
+const cartOptions = {
+  attributes: {
+    exclude: ['userId', 'updatedAt'],
+  },
+  include: {
+    model: Product,
+    as: 'cartProducts',
+    attributes: {
+      exclude: [
+        'costPrice',
+        'discription',
+        'highlights',
+        'subCategorieId',
+        'createdAt',
+        'updatedAt',
+      ],
+    },
+    through: {
+      attributes: ['quantity', 'total'],
+    },
+  },
+};
 
 // Get all carts
 router.get('/', (req, res, next) => {
-  Cart.findAll({ where: req.query })
-    .then(function (carts) {
+  Cart.findAll({
+    where: req.query,
+    ...cartOptions,
+  })
+    .then((carts) => {
       res.send(carts);
     })
     .catch(next);
 });
 
-// router.get('/rating/:productId', (req, res, next) => {
-//   Review.findAll({
-//     where: {
-//       productId: req.params.productId,
-//     },
-//     attributes: [
-//       'rating',
-//       [Sequelize.fn('COUNT', Sequelize.col('rating')), 'count'],
-//     ],
-//     group: 'rating',
-//   })
-//     .then((data) => {
-//       return res.status(200).send(data);
-//     })
-//     .catch((err) => next(err));
-// });
+// Get cart by Id
+router.get('/user', (req, res) => {
+  if (req.user) {
+    Cart.findOne({
+      where: {
+        userId: req.user.id,
+      },
+      ...cartOptions,
+    }).then((cart) => {
+      res.send(cart);
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
 
-// // Get one review by id
-// router.get('/:reviewId', (req, res) => {
-//   res.send(req.review);
-// });
+router.post('/:productId', (req, res, next) => {
+  if (req.user) {
+    Cart.findOne({
+      where: {
+        userId: req.user.id,
+      },
+    }).then((cart) => {
+      CartProduct.create({
+        cartId: cart.id,
+        productId: req.params.productId,
+        quantity: req.body.quantity ? req.body.quantity : 1,
+      })
+        .then((cartProduct) => res.status(200).send(cartProduct))
+        .catch((err) => next(err));
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
 
-// // Create a review for a product
-// router.post('/product/:productId', isAuth, (req, res, next) => {
-//   if (req.user) {
-//     const { rating, comment } = req.body;
-//     console.log('**************');
-//     console.log('rating', rating, { ...req.body });
-//     Review.create({
-//       rating,
-//       comment,
-//       userId: req.user.id,
-//       productId: req.params.productId,
-//     })
-//       .then((review) => {
-//         res.status(200).send(review);
-//       })
-//       .catch((err) => next(err));
-//   } else {
-//     res.sendStatus(401);
-//   }
-// });
+router.put('/:productId', (req, res, next) => {
+  if (req.user) {
+    Cart.findOne({
+      where: {
+        userId: req.user.id,
+      },
+    }).then(async (cart) => {
+      const cartProduct = await CartProduct.findOne({
+        where: {
+          cartId: cart.id,
+          productId: req.params.productId,
+        },
+      });
 
-// router.put('/:reviewId', function (req, res, next) {
-//   const { rating = req.review.rating, comment = req.review.comment } = req.body;
-//   console.log(rating, comment, req.body.rating);
-//   req.review
-//     .update({
-//       ...req.review,
-//       rating: rating,
-//       comment: comment,
-//     })
-//     .then(function (review) {
-//       res.send(review);
-//     })
-//     .catch(next);
-// });
+      cartProduct
+        .update({
+          ...cart,
+          quantity: req.body.quantity,
+        })
+        .then((cartProducts) => {
+          res.status(200).send(cartProducts);
+        })
+        .catch((err) => next(err));
+    });
+  } else {
+    res.sendStatus(401);
+  }
+});
 
-// router.delete('/:reviewId', function (req, res, next) {
-//   if (req.user.isAdmin || req.user.id === req.review.userId) {
-//     req.review
-//       .destroy()
-//       .then(function () {
-//         res.sendStatus(204);
-//       })
-//       .catch(next);
-//   }
-// });
+router.delete('/all', async (req, res, next) => {
+  if (req.user.id) {
+    CartProduct.destroy({ where: {}, truncate: true })
+      .then(function () {
+        res.sendStatus(204);
+      })
+      .catch(next);
+  }
+});
+
+router.delete('/:productId', async (req, res, next) => {
+  if (req.user.id) {
+    const cart = await Cart.findOne({
+      where: {
+        userId: req.user.id,
+      },
+    });
+
+    CartProduct.destroy({
+      where: {
+        cartId: cart.id,
+        productId: req.params.productId,
+      },
+    })
+      .then(() => {
+        res.sendStatus(204);
+      })
+      .catch(next);
+  }
+
+  //   const cartProduct = await CartProduct.findOne({
+  //     where: {
+  //       cartId: cart.id,
+  //       productId: req.params.productId,
+  //     },
+  //   });
+
+  //   cartProduct
+  //     .destroy()
+  //     .then((deletedProduct) => {
+  //       res.send(deletedProduct);
+  //     })
+  //     .catch(next);
+  // }
+});
 
 module.exports = router;

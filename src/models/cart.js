@@ -6,19 +6,20 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
-    totalCost: DataTypes.INTEGER,
   });
 
   Cart.associate = (models) => {
     Cart.belongsTo(models.User, {
+      onDelete: 'cascade',
       foreignKey: {
-        name: 'userID',
+        name: 'userId',
         allowNull: false,
       },
       as: 'cart',
     });
 
     Cart.belongsToMany(models.Product, {
+      onDelete: 'cascade',
       through: 'CartProduct',
       as: 'cartProducts',
       foreignKey: 'cartId',

@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Order.associate = (models) => {
     Order.belongsTo(models.User, {
+      onDelete: 'cascade',
       foreignKey: {
         name: 'userID',
         allowNull: false,
@@ -20,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'order',
     });
     Order.belongsTo(models.Cart, {
+      onDelete: 'cascade',
       foreignKey: {
         name: 'cartId',
         allowNull: false,

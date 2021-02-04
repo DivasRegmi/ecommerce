@@ -21,6 +21,7 @@ module.exports = {
       },
       brand: {
         type: Sequelize.STRING,
+        defaultValue: 'None',
       },
       costPrice: {
         type: Sequelize.INTEGER,
@@ -37,13 +38,9 @@ module.exports = {
       },
       rating: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
-      favCount: {
-        type: Sequelize.INTEGER,
-      },
-      isOutOfStock: {
-        type: Sequelize.INTEGER,
-      },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

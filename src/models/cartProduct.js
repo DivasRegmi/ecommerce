@@ -1,3 +1,19 @@
+const getTotal = async (cartProduct, sequelize) => {
+  const { Product } = sequelize.models;
+
+  try {
+    const { productId, quantity } = cartProduct;
+    const product = await Product.findByPk(productId);
+
+    const itemPrice = product.seelingPrice;
+    // eslint-disable-next-line no-param-reassign
+    cartProduct.total = itemPrice * quantity;
+    return cartProduct.save();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 module.exports = (sequelize, DataTypes) => {
   const CartProduct = sequelize.define(
     'CartProduct',
@@ -27,15 +43,13 @@ module.exports = (sequelize, DataTypes) => {
           fields: ['cartId', 'productId'],
         },
       ],
-      hooks: {
-        beforeCreate: (cartProduct) => {
-          const itemPrice = sequelize.models.product.getSeelingPrice({
-            where: { id: cartProduct.productId },
-          });
-          const { quantity } = cartProduct;
 
-          // eslint-disable-next-line no-param-reassign
-          cartProduct.total = itemPrice * quantity;
+      hooks: {
+        afterCreate: (cartProduct) => {
+          getTotal(cartProduct, sequelize);
+        },
+        afterUpdate: (cartProduct) => {
+          getTotal(cartProduct, sequelize);
         },
       },
     }

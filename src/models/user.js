@@ -30,9 +30,9 @@ module.exports = (sequelize, DataTypes) => {
 
           const { Cart } = sequelize.models;
 
-          Cart.create({ userId: user.id }, { transaction }).catch((err) =>
-            console.error(err)
-          );
+          Cart.create({ userId: user.id }, { transaction })
+            .then((cart) => console.log(JSON.stringify(cart)))
+            .catch((err) => console.error(err));
         },
       },
     }

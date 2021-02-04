@@ -27,11 +27,16 @@ module.exports = (sequelize, DataTypes) => {
           return rawValue ? rawValue.split(',') : null;
         },
       },
-      brand: DataTypes.STRING,
+      brand: {
+        type: DataTypes.STRING,
+        defaultValue: 'None',
+      },
       discription: DataTypes.TEXT,
-      rating: DataTypes.NUMBER,
-      favCount: DataTypes.NUMBER,
-      isOutOfStock: DataTypes.NUMBER,
+      rating: {
+        type: DataTypes.NUMBER,
+        defaultValue: 0,
+      },
+
       costPrice: {
         type: DataTypes.NUMBER,
         allowNull: false,
@@ -84,16 +89,17 @@ module.exports = (sequelize, DataTypes) => {
       through: 'FavProductList',
       as: 'favProductList',
       foreignKey: 'productId',
+      onDelete: 'cascade',
     });
 
     Product.belongsToMany(models.Cart, {
       through: 'CartProduct',
       as: 'cartProducts',
       foreignKey: 'productId',
+      onDelete: 'cascade',
     });
 
     Product.hasMany(models.Review, {
-      onDelete: 'cascade',
       foreignKey: {
         name: 'productId',
         allowNull: 'false',
@@ -102,6 +108,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Product.belongsTo(models.SubCategorie, {
+      onDelete: 'cascade',
       foreignKey: {
         name: 'subCategorieId',
         allowNull: 'false',

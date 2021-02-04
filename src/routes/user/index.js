@@ -68,8 +68,21 @@ router.param('userId', (req, res, next, userId) => {
     .catch(next);
 });
 
-router.get('/:userId', function (req, res) {
-  res.send(req.userInfo.getFavProductList());
+router.get('/:userId', async (req, res, next) => {
+  try {
+    const favList = await req.userInfo.getFavProductList({
+      include: {
+        as: 'favProductList',
+        attributes: ['name', 'rating', 'seelingPrice', 'imageArray'],
+        through: { attributes: [] },
+      },
+    });
+    res.send({ ...req.userInfo, ...favList });
+  } catch (error) {
+    next(error);
+  }
+
+  // .then((data) => console.log(data));
 });
 
 router.post('/addFav/:productId', async (req, res, next) => {
