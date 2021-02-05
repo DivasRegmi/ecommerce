@@ -5,7 +5,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const { Admin, User } = require('../src/models/index');
 const oauth = require('./oauth');
 
-const { userMethods, adminMethods } = require('../src/controllers/auth');
+const { userMethods, adminMethods } = require('../src/routes/auth/controller');
 
 module.exports = (passport) => {
   /* Local Strategy for Admin login and auth  */

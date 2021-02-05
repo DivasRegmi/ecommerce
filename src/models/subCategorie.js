@@ -1,11 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
-  const SubCategorie = sequelize.define('SubCategorie', {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+  const SubCategorie = sequelize.define(
+    'SubCategorie',
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
     },
-  });
+    {
+      paranoid: true,
+    }
+  );
 
   SubCategorie.associate = (models) => {
     SubCategorie.hasMany(models.Product, {

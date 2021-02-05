@@ -1,4 +1,4 @@
-const { User } = require('../../models');
+const { User } = require('../../../models');
 
 const oauthCallback = (req, res) => {
   const backURL = req.header('Referer') || '/';

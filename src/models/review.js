@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      paranoid: true,
       hooks: {
         afterUpdate: (review, options) => {
           const { transaction } = options;

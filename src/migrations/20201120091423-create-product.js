@@ -5,7 +5,6 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        onDelete: 'CASCADE',
         type: Sequelize.INTEGER,
       },
       name: {
@@ -50,8 +49,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      deletedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
       subCategorieId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'SubCategories',
           key: 'id',

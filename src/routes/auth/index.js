@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
-const { adminMethods, userMethods } = require('../../controllers/auth');
+const { adminMethods, userMethods } = require('./controller');
 
 const { isAuth } = require('../../middlewares/auth');
 

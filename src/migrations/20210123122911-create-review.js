@@ -29,9 +29,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      deletedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
       productId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        onDelete: 'CASCADE',
         references: {
           model: 'Products',
           key: 'id',

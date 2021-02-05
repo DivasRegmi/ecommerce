@@ -91,7 +91,8 @@ router.put('/:categorieId', function (req, res, next) {
     })
     .catch(next);
 });
-router.put('/:subCategorieId', function (req, res, next) {
+
+router.put('/subcategorie/:subCategorieId', function (req, res, next) {
   const { name, categorieId } = req.body;
   req.subCategorie
     .update({ name, categorieId })

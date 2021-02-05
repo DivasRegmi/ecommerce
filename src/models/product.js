@@ -67,6 +67,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      paranoid: true,
       hooks: {
         afterDestroy: (product) => {
           const images = product.imageArray;

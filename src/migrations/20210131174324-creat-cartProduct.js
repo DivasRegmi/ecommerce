@@ -12,6 +12,7 @@ module.exports = {
         cartId: {
           type: Sequelize.INTEGER,
           allowNull: false,
+          onDelete: 'CASCADE',
           references: {
             model: 'Carts',
             key: 'id',
@@ -21,6 +22,7 @@ module.exports = {
         productId: {
           type: Sequelize.INTEGER,
           allowNull: false,
+          onDelete: 'CASCADE',
           references: {
             model: 'Products',
             key: 'id',
@@ -41,6 +43,10 @@ module.exports = {
           type: Sequelize.DATE,
         },
         updatedAt: {
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
+        deletedAt: {
           allowNull: false,
           type: Sequelize.DATE,
         },

@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       oauthid: DataTypes.STRING,
     },
     {
+      paranoid: true,
       hooks: {
         afterCreate: (user, options) => {
           const { transaction } = options;

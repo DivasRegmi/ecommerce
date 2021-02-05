@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
-const { Admin } = require('../../models/index');
-const { validateRegistorInput } = require('../../validation');
+const { Admin } = require('../../../models');
+const { validateRegistorInput } = require('../../../validation');
 
 /* Register Admin  */
 

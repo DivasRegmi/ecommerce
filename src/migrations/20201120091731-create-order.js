@@ -9,6 +9,7 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'Users',
           key: 'id',
@@ -17,6 +18,7 @@ module.exports = {
       },
       cartId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'Carts',
           key: 'id',
@@ -40,6 +42,10 @@ module.exports = {
         type: Sequelize.DATE,
       },
       updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      deletedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
