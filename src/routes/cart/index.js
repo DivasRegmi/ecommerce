@@ -70,22 +70,27 @@ router.post('/:productId', getUserCartId, (req, res, next) => {
 
 router.put('/:productId', getUserCartId, async (req, res, next) => {
   if (req.user) {
-    const cartProduct = await CartProduct.findOne({
+    CartProduct.findOne({
       where: {
         cartId: req.user.cartId,
         productId: req.params.productId,
       },
-    });
-
-    cartProduct
-      .update({
-        ...cartProduct,
-        quantity: req.body.quantity,
+    })
+      .then((cartProduct) => {
+        if (!cartProduct) {
+          res.send('Not Found ');
+        }
+        cartProduct
+          .update({
+            ...cartProduct,
+            quantity: req.body.quantity,
+          })
+          .then((cartProducts) => {
+            res.status(200).send(cartProducts);
+          })
+          .catch((err) => next(err));
       })
-      .then((cartProducts) => {
-        res.status(200).send(cartProducts);
-      })
-      .catch((err) => next(err));
+      .catch(next);
   } else {
     res.sendStatus(401);
   }

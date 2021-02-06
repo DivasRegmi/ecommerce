@@ -3,7 +3,20 @@ module.exports = (sequelize, DataTypes) => {
     'Order',
     {
       userId: DataTypes.INTEGER,
-      cartId: DataTypes.INTEGER,
+      productIdArr: {
+        type: DataTypes.STRING,
+        get() {
+          const rawValue = this.getDataValue('productIdArr');
+          return rawValue ? rawValue.split(',') : null;
+        },
+      },
+      quantityIdArr: {
+        type: DataTypes.STRING,
+        get() {
+          const rawValue = this.getDataValue('quantityIdArr');
+          return rawValue ? rawValue.split(',') : null;
+        },
+      },
       mobileNumber: {
         type: DataTypes.BIGINT(11),
         allowNull: false,
@@ -13,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       location: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      total: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       status: {
@@ -34,14 +51,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       as: 'user',
     });
-    Order.belongsTo(models.Cart, {
-      onDelete: 'cascade',
-      foreignKey: {
-        name: 'cartId',
-        allowNull: false,
-      },
-      as: 'cart',
-    });
+    // Order.belongsTo(models.Cart, {
+    //   onDelete: 'cascade',
+    //   foreignKey: {
+    //     name: 'cartId',
+    //     allowNull: false,
+    //   },
+    //   as: 'cart',
+    // });
   };
 
   return Order;

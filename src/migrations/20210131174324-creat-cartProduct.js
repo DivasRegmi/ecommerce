@@ -46,10 +46,6 @@ module.exports = {
           allowNull: false,
           type: Sequelize.DATE,
         },
-        deletedAt: {
-          allowNull: false,
-          type: Sequelize.DATE,
-        },
       },
       {
         uniqueKeys: {

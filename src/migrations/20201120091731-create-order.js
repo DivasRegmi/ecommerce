@@ -16,14 +16,15 @@ module.exports = {
           as: 'userId',
         },
       },
-      cartId: {
+      productIdArr: {
+        type: Sequelize.STRING,
+      },
+      quantityIdArr: {
+        type: Sequelize.STRING,
+      },
+      total: {
         type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Carts',
-          key: 'id',
-          as: 'cartId',
-        },
+        allowNull: false,
       },
       mobileNumber: {
         type: Sequelize.BIGINT(11),
@@ -46,7 +47,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       deletedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });

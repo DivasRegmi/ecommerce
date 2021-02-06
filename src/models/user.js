@@ -1,5 +1,7 @@
 // const bcrypt = require('bcryptjs');
 
+const cart = require('./cart');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -45,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         name: 'userId',
         allowNull: false,
       },
+      as: 'cart',
     });
 
     User.belongsToMany(models.Product, {

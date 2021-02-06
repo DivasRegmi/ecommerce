@@ -1,24 +1,18 @@
 const router = require('express').Router();
 
-const { Order, User, Cart, Product } = require('../../models');
+const { json } = require('body-parser');
+const { Order, User, Cart, Product, Sequelize } = require('../../models');
 
-const getUserCartId = require('../../middlewares/user');
+const { Op } = Sequelize;
 
 const cartOptions = {
   attributes: ['id', 'total'],
   include: {
     model: Product,
     as: 'cartProducts',
-    attributes: [
-      'imageArray',
-      'seelingPrice',
-      'name',
-      'brand',
-      'markedPrice',
-      'discountPercent',
-    ],
+    attributes: ['id'],
     through: {
-      attributes: ['total', 'quantity'],
+      attributes: ['quantity'],
     },
   },
 };
@@ -30,13 +24,10 @@ const orderOptions = {
       as: 'user',
       attributes: ['name', 'mobile', 'address'],
     },
-    {
-      model: Cart,
-      as: 'cart',
-      ...cartOptions,
-    },
   ],
-  attributes: ['mobileNumber', 'location', 'status', 'createdAt', 'updatedAt'],
+  attributes: {
+    exclude: ['userId'],
+  },
 };
 
 router.param('orderId', (req, res, next, orderId) => {
@@ -60,7 +51,25 @@ router.get('/', (req, res, next) => {
     where: req.query,
     ...orderOptions,
   })
-    .then(function (orders) {
+    .then((orders) => {
+      // const orderWithProduct = (ordersArr) => {
+      //   const newOrders = ordersArr.map(async (order) => {
+      //     return {
+      //       order,
+      //       product: await Product.findAll({
+      //         where: {
+      //           id: {
+      //             [Op.or]: order.productIdArr,
+      //           },
+      //         },
+      //       }),
+      //     };
+      //   });
+      //   return Promise.all(newOrders);
+      // };
+      // orderWithProduct(orders)
+      //   .then((ordersWithProduct) => res.send(ordersWithProduct))
+      //   .catch(next);
       res.send(orders);
     })
     .catch(next);
@@ -83,17 +92,45 @@ router.get('/:orderId', (req, res) => {
   res.send(req.order);
 });
 
-router.post('/', getUserCartId, (req, res, next) => {
+router.post('/', (req, res, next) => {
   const { mobileNumber, location } = req.body;
+
   if (req.user) {
-    Order.create({
-      userId: req.user.id,
-      cartId: req.user.cartId,
-      mobileNumber,
-      location,
+    Cart.findOne({
+      where: { userId: req.user.id },
+      ...cartOptions,
     })
-      .then(() => {
-        res.send('Send Order');
+      .then((cart) => {
+        if (!cart) {
+          res.status(404).send('Cart not found');
+        }
+
+        const { cartProducts } = cart;
+        const productIdArr = [];
+        const quantityIdArr = [];
+
+        console.log(cartProducts);
+        if (cartProducts.length === 0) {
+          res.status(404).send('No product Found');
+        }
+
+        cartProducts.forEach((product) => {
+          productIdArr.push(product.id);
+          quantityIdArr.push(product.CartProduct.quantity);
+        });
+
+        Order.create({
+          userId: req.user.id,
+          mobileNumber,
+          location,
+          total: cart.total,
+          productIdArr: productIdArr.toString(),
+          quantityIdArr: quantityIdArr.toString(),
+        })
+          .then(() => {
+            res.send('Send Order');
+          })
+          .catch(next);
       })
       .catch(next);
   }
@@ -104,6 +141,19 @@ router.put('/:orderId', (req, res, next) => {
     .then((order) => {
       order
         .update(req.body)
+        .then((updatedorder) => {
+          res.send(updatedorder);
+        })
+        .catch(next);
+    })
+    .catch(next);
+});
+
+router.delete('/:orderId', (req, res, next) => {
+  Order.findByPk(req.params.orderId)
+    .then((order) => {
+      order
+        .delete(req.body)
         .then((updatedorder) => {
           res.send(updatedorder);
         })
