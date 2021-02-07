@@ -33,6 +33,7 @@ const orderOptions = {
     {
       model: Product,
       as: 'products',
+      required: true,
       attributes: [
         'name',
         'imageArray',
@@ -72,6 +73,9 @@ router.get('/', (req, res, next) => {
     ...orderOptions,
   })
     .then((orders) => {
+      console.log('***************');
+      console.log();
+      console.log(JSON.stringify(orders));
       res.send(orders);
     })
     .catch(next);
@@ -104,20 +108,20 @@ router.post('/', (req, res, next) => {
     })
       .then(async (cart) => {
         if (!cart) {
-          res.status(404).send('Cart not found');
+          return res.status(404).send('Cart not found');
         }
-        if (!cart.isNewRecord) {
-          res.status(404).send('Already Created');
+        if (cart.ordered) {
+          return res.status(404).send('Already ordered');
         }
 
+        const { products } = cart;
+        if (products.length === 0) {
+          return res.status(404).send('No product Found');
+        }
+
+        const t = await sequelize.transaction();
         try {
-          const t = await sequelize.transaction();
-          const { products } = cart;
-
-          if (products.length === 0) {
-            res.status(404).send('No product Found');
-          }
-          Order.create(
+          const order = await Order.create(
             {
               userId: req.user.id,
               mobileNumber,
@@ -127,37 +131,32 @@ router.post('/', (req, res, next) => {
             {
               transition: t,
             }
-          )
-            .then((order) => {
-              products.forEach((product) => {
-                const { total, quantity } = product.CartProduct;
+          );
 
-                OrderProduct.create(
-                  {
-                    orderId: order.id,
-                    productId: product.id,
-                    quantity,
-                    total,
-                  },
-                  { transaction: t }
-                )
-                  .then(async () => {
-                    await t.commit();
-                  })
-                  .catch(async (err) => {
-                    await t.rollback();
-                    next(err);
-                  });
-              });
+          Promise.all(
+            products.map(async (product) => {
+              const { total, quantity } = product.CartProduct;
 
-              res.send('Send Order');
+              await OrderProduct.create(
+                {
+                  orderId: order.id,
+                  productId: product.id,
+                  quantity,
+                  total,
+                },
+                { transaction: t }
+              );
             })
-            .catch(next);
+          ).then(() => {
+            t.commit();
+            res.send('Send Order');
+          });
         } catch (error) {
+          await t.rollback();
           next(error);
         }
       })
-      .catch(next);
+      .catch();
   }
 });
 

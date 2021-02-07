@@ -18,17 +18,17 @@ module.exports = {
           as: 'userId',
         },
       },
-
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
+      ordered: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
+
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      deletedAt: {
-        allowNull: true,
+      createdAt: {
+        allowNull: false,
         type: Sequelize.DATE,
       },
     });

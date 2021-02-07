@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         throw new Error('Do not try to set the `total` value!');
       },
     },
+    ordered: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   });
 
   Cart.associate = (models) => {

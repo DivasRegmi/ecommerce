@@ -32,7 +32,10 @@ router.use('/info', (req, res, next) => {
         {
           model: Order,
           as: 'orders',
-          include: ['orderProduct'],
+          include: {
+            model: Product,
+            as: 'products',
+          },
         },
         {
           model: Product,

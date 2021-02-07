@@ -26,6 +26,18 @@ const cartOptions = {
   },
 };
 
+const setCartOrderFalse = (cartId) => {
+  Cart.findByPk(cartId)
+    .then((cart) => {
+      if (cart.ordered) {
+        cart
+          .update({ ...cart, ordered: false })
+          .catch((err) => console.error(err));
+      }
+    })
+    .catch((err) => console.error(err));
+};
+
 // Get all carts
 router.get('/', (req, res, next) => {
   Cart.findAll({
@@ -54,14 +66,17 @@ router.get('/user', (req, res) => {
   }
 });
 
-router.post('/:productId', getUserCartId, (req, res, next) => {
+router.post('/:productId', getUserCartId, async (req, res, next) => {
   if (req.user) {
     CartProduct.create({
       cartId: req.user.cartId,
       productId: req.params.productId,
       quantity: req.body.quantity ? req.body.quantity : 1,
     })
-      .then((cartProduct) => res.status(200).send(cartProduct))
+      .then((cartProduct) => {
+        setCartOrderFalse(req.user.cartId);
+        res.status(200).send(cartProduct);
+      })
       .catch((err) => next(err));
   } else {
     res.sendStatus(401);
@@ -86,6 +101,7 @@ router.put('/:productId', getUserCartId, async (req, res, next) => {
             quantity: req.body.quantity,
           })
           .then((products) => {
+            setCartOrderFalse(req.user.cartId);
             res.status(200).send(products);
           })
           .catch((err) => next(err));
@@ -100,6 +116,7 @@ router.delete('/empty', getUserCartId, async (req, res, next) => {
   if (req.user.id) {
     CartProduct.destroy({ where: { cartId: req.user.cartId }, truncate: true })
       .then(function () {
+        setCartOrderFalse(req.user.cartId);
         res.sendStatus(204);
       })
       .catch(next);
@@ -115,6 +132,7 @@ router.delete('/:productId', getUserCartId, async (req, res, next) => {
       },
     })
       .then(() => {
+        setCartOrderFalse(req.user.cartId);
         res.sendStatus(204);
       })
       .catch(next);

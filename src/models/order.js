@@ -25,6 +25,22 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       paranoid: true,
+      hooks: {
+        afterCreate: (order) => {
+          const { Cart } = sequelize.models;
+          Cart.findOne({
+            where: {
+              userId: order.userId,
+            },
+          })
+            .then((cart) => {
+              cart
+                .update({ ...cart, ordered: true })
+                .catch((error) => console.error(error));
+            })
+            .catch((error) => console.error(error));
+        },
+      },
     }
   );
 
@@ -40,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
     Order.belongsToMany(models.Product, {
       through: 'OrderProduct',
       as: 'products',
-      foreignKey: 'productId',
+      foreignKey: 'orderId',
       onDelete: 'cascade',
     });
   };
