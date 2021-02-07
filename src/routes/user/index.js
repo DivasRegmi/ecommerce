@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Product, FavProductList } = require('../../models');
+const { User, Product, FavProductList, Order } = require('../../models');
 
 // Get all users
 router.get('/', (req, res, next) => {
@@ -21,32 +21,41 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-// Get a user's info, including orders, addresses, billing for personal info page
-// router.use('/info', function (req, res, next) {
-//   if (req.user) {
-//     User.findOne({
-//       where: {
-//         id: req.user.id,
-//       },
-//       include: [
-//         {
-//           model: Order,
-//           include: [Product, ProductOrders],
-//         },
-//         Address,
-//         Billing,
-//       ],
-//     }).then(function (user) {
-//       if (user) {
-//         req.loggedInUser = user;
-//         next();
-//         return null;
-//       }
-//     });
-//   } else {
-//     res.send();
-//   }
-// });
+// Get a user's info, including orders
+router.use('/info', (req, res, next) => {
+  if (req.user) {
+    User.findOne({
+      where: {
+        id: req.user.id,
+      },
+      include: [
+        {
+          model: Order,
+          as: 'orders',
+          include: ['orderProduct'],
+        },
+        {
+          model: Product,
+          as: 'favProductList',
+          attributes: ['name', 'rating', 'seelingPrice', 'imageArray'],
+          through: { attributes: [] },
+        },
+      ],
+    }).then(function (user) {
+      if (user) {
+        req.loggedInUser = user;
+        next();
+        return null;
+      }
+    });
+  } else {
+    res.send();
+  }
+});
+
+router.get('/info', (req, res) => {
+  res.send(req.loggedInUser);
+});
 
 // middleware for all routes that use userId
 router.param('userId', (req, res, next, userId) => {
