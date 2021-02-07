@@ -87,14 +87,20 @@ module.exports = (sequelize, DataTypes) => {
   Product.associate = (models) => {
     Product.belongsToMany(models.User, {
       through: 'FavProductList',
-      as: 'favProductList',
+      as: 'users',
       foreignKey: 'productId',
       onDelete: 'cascade',
     });
 
     Product.belongsToMany(models.Cart, {
       through: 'CartProduct',
-      as: 'cartProducts',
+      as: 'carts',
+      foreignKey: 'productId',
+      onDelete: 'cascade',
+    });
+    Product.belongsToMany(models.Order, {
+      through: 'OrderProduct',
+      as: 'orders',
       foreignKey: 'productId',
       onDelete: 'cascade',
     });

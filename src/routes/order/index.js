@@ -1,18 +1,24 @@
 const router = require('express').Router();
 
-const { json } = require('body-parser');
-const { Order, User, Cart, Product, Sequelize } = require('../../models');
-
-const { Op } = Sequelize;
+const {
+  Order,
+  User,
+  Cart,
+  Product,
+  OrderProduct,
+  sequelize,
+} = require('../../models');
 
 const cartOptions = {
-  attributes: ['id', 'total'],
+  attributes: {
+    exclude: ['userId', 'updatedAt'],
+  },
   include: {
     model: Product,
-    as: 'cartProducts',
+    as: 'products',
     attributes: ['id'],
     through: {
-      attributes: ['quantity'],
+      attributes: ['quantity', 'total'],
     },
   },
 };
@@ -24,9 +30,23 @@ const orderOptions = {
       as: 'user',
       attributes: ['name', 'mobile', 'address'],
     },
+    {
+      model: Product,
+      as: 'products',
+      attributes: [
+        'name',
+        'imageArray',
+        'seelingPrice',
+        'markedPrice',
+        'discountPercent',
+      ],
+      through: {
+        attributes: ['quantity', 'total'],
+      },
+    },
   ],
   attributes: {
-    exclude: ['userId'],
+    exclude: ['userId', 'deletedAt'],
   },
 };
 
@@ -52,24 +72,6 @@ router.get('/', (req, res, next) => {
     ...orderOptions,
   })
     .then((orders) => {
-      // const orderWithProduct = (ordersArr) => {
-      //   const newOrders = ordersArr.map(async (order) => {
-      //     return {
-      //       order,
-      //       product: await Product.findAll({
-      //         where: {
-      //           id: {
-      //             [Op.or]: order.productIdArr,
-      //           },
-      //         },
-      //       }),
-      //     };
-      //   });
-      //   return Promise.all(newOrders);
-      // };
-      // orderWithProduct(orders)
-      //   .then((ordersWithProduct) => res.send(ordersWithProduct))
-      //   .catch(next);
       res.send(orders);
     })
     .catch(next);
@@ -100,37 +102,60 @@ router.post('/', (req, res, next) => {
       where: { userId: req.user.id },
       ...cartOptions,
     })
-      .then((cart) => {
+      .then(async (cart) => {
         if (!cart) {
           res.status(404).send('Cart not found');
         }
-
-        const { cartProducts } = cart;
-        const productIdArr = [];
-        const quantityIdArr = [];
-
-        console.log(cartProducts);
-        if (cartProducts.length === 0) {
-          res.status(404).send('No product Found');
+        if (!cart.isNewRecord) {
+          res.status(404).send('Already Created');
         }
 
-        cartProducts.forEach((product) => {
-          productIdArr.push(product.id);
-          quantityIdArr.push(product.CartProduct.quantity);
-        });
+        try {
+          const t = await sequelize.transaction();
+          const { products } = cart;
 
-        Order.create({
-          userId: req.user.id,
-          mobileNumber,
-          location,
-          total: cart.total,
-          productIdArr: productIdArr.toString(),
-          quantityIdArr: quantityIdArr.toString(),
-        })
-          .then(() => {
-            res.send('Send Order');
-          })
-          .catch(next);
+          if (products.length === 0) {
+            res.status(404).send('No product Found');
+          }
+          Order.create(
+            {
+              userId: req.user.id,
+              mobileNumber,
+              location,
+              total: cart.total,
+            },
+            {
+              transition: t,
+            }
+          )
+            .then((order) => {
+              products.forEach((product) => {
+                const { total, quantity } = product.CartProduct;
+
+                OrderProduct.create(
+                  {
+                    orderId: order.id,
+                    productId: product.id,
+                    quantity,
+                    total,
+                  },
+                  { transaction: t }
+                )
+                  .then(async () => {
+                    await t.commit();
+                  })
+                  .catch(async (err) => {
+                    await t.rollback();
+                    next(err);
+                  });
+              });
+
+              res.send('Send Order');
+            })
+            .catch(next);
+        } catch (error) {
+          next(error);
+        }
       })
       .catch(next);
   }
@@ -152,8 +177,11 @@ router.put('/:orderId', (req, res, next) => {
 router.delete('/:orderId', (req, res, next) => {
   Order.findByPk(req.params.orderId)
     .then((order) => {
+      if (!order) {
+        res.status(404).send('Not found');
+      }
       order
-        .delete(req.body)
+        .destroy(req.body)
         .then((updatedorder) => {
           res.send(updatedorder);
         })

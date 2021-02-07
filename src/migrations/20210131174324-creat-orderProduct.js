@@ -1,7 +1,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable(
-      'CartProducts',
+      'OrderProducts',
       {
         id: {
           allowNull: false,
@@ -9,14 +9,14 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        cartId: {
+        orderId: {
           type: Sequelize.INTEGER,
           allowNull: false,
           onDelete: 'CASCADE',
           references: {
-            model: 'Carts',
+            model: 'Orders',
             key: 'id',
-            as: 'cartId',
+            as: 'orderId',
           },
         },
         productId: {
@@ -51,13 +51,13 @@ module.exports = {
       {
         uniqueKeys: {
           actions_unique: {
-            fields: ['cartId', 'productId'],
+            fields: ['orderId', 'productId'],
           },
         },
       }
     );
   },
   down: async (queryInterface) => {
-    await queryInterface.dropTable('CartsProducts');
+    await queryInterface.dropTable('OrderProducts');
   },
 };

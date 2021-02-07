@@ -16,12 +16,6 @@ module.exports = {
           as: 'userId',
         },
       },
-      productIdArr: {
-        type: Sequelize.STRING,
-      },
-      quantityIdArr: {
-        type: Sequelize.STRING,
-      },
       total: {
         type: Sequelize.INTEGER,
         allowNull: false,

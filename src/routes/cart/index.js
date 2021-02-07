@@ -9,7 +9,7 @@ const cartOptions = {
   },
   include: {
     model: Product,
-    as: 'cartProducts',
+    as: 'products',
     attributes: {
       exclude: [
         'costPrice',
@@ -85,8 +85,8 @@ router.put('/:productId', getUserCartId, async (req, res, next) => {
             ...cartProduct,
             quantity: req.body.quantity,
           })
-          .then((cartProducts) => {
-            res.status(200).send(cartProducts);
+          .then((products) => {
+            res.status(200).send(products);
           })
           .catch((err) => next(err));
       })

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
       get() {
-        const products = this.getDataValue('cartProducts');
+        const products = this.getDataValue('products');
 
         let total = 0;
         if (products) {
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     Cart.belongsToMany(models.Product, {
       onDelete: 'cascade',
       through: 'CartProduct',
-      as: 'cartProducts',
+      as: 'products',
       foreignKey: 'cartId',
     });
   };
