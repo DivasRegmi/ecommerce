@@ -1,7 +1,5 @@
 // const bcrypt = require('bcryptjs');
 
-const cart = require('./cart');
-
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
