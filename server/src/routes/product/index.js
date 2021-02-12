@@ -31,12 +31,13 @@ router.param('productId', function (req, res, next, productId) {
     .catch(next);
 });
 
-router.get('/all', (req, res, next) => {
+router.get('/', (req, res, next) => {
   Product.findAll()
     .then((product) => {
       if (!product) {
         return res.status(404).json({ message: 'Product Not Found' });
       }
+      res.setHeader('X-Total-Count', product.length);
       res.status(200).json(product);
     })
     .catch(next);
@@ -112,7 +113,7 @@ router.post('/', upload.array('pro_images'), (req, res, next) => {
   })
     .then((subcategorie) => {
       if (!subcategorie) {
-        res.status(404).json({ message: 'SubCategorie not found' });
+        return res.status(404).json({ message: 'SubCategorie not found' });
       }
       Product.create({
         name,

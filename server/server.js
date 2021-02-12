@@ -3,12 +3,20 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const passport = require('passport');
+const cors = require('cors');
 
 const { sequelize } = require('./src/models/index');
 const sessionConfig = require('./config/session');
 const passportconfig = require('./config/passport.config');
 
 const app = express();
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    exposedHeaders: 'X-Total-Count',
+  })
+);
 
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
