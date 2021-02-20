@@ -32,6 +32,12 @@ module.exports = (sequelize, DataTypes) => {
   const Review = sequelize.define(
     'Review',
     {
+      userId: {
+        type: DataTypes.INTEGER,
+      },
+      productId: {
+        type: DataTypes.INTEGER,
+      },
       rating: {
         type: DataTypes.INTEGER,
         validate: {
@@ -49,6 +55,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       paranoid: true,
+
+      indexes: [
+        {
+          unique: true,
+          fields: ['userId', 'productId'],
+        },
+      ],
+
       hooks: {
         afterUpdate: (review, options) => {
           const { transaction } = options;

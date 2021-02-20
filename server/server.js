@@ -11,12 +11,12 @@ const passportconfig = require('./config/passport.config');
 
 const app = express();
 
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    exposedHeaders: 'X-Total-Count',
-  })
-);
+// app.use(
+//   cors({
+//     origin: 'http://localhost:3000',
+//     exposedHeaders: 'X-Total-Count',
+//   })
+// );
 
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
