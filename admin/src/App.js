@@ -4,7 +4,10 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import getTheme from './configs/themeConfig';
 import ThemeContext from './context/ThemeContext';
 
+import { Provider } from 'react-redux';
+
 import Routes from './Routes';
+import { store } from './redux/store';
 
 const App = () => {
   const curThemeName = localStorage.getItem('appTheme') || 'light';
@@ -24,7 +27,9 @@ const App = () => {
     <ThemeContext.Provider value={{ setThemeName, curThemeName }}>
       <ThemeProvider theme={theme}>
         <div className="App">
-          <Routes />
+          <Provider store={store}>
+            <Routes />
+          </Provider>
         </div>
       </ThemeProvider>
     </ThemeContext.Provider>
