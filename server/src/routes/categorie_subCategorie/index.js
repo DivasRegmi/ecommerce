@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Categorie, SubCategorie } = require('../../models');
+const { Categorie, SubCategorie, Product } = require('../../models');
 
 router.param('categorieId', function (req, res, next, categorieId) {
   Categorie.findByPk(categorieId)
@@ -32,14 +32,26 @@ router.param('subCategorieId', function (req, res, next, subCategorieId) {
 
 // Get all categories
 router.get('/', (req, res, next) => {
-  Categorie.findAll()
+  Categorie.findAll({
+    include: {
+      model: SubCategorie,
+      as: 'SubCategories',
+      attributes: ['id', 'name'],
+    },
+  })
     .then(function (categorie) {
       res.send(categorie);
     })
     .catch(next);
 });
 router.get('/subCategorie', (req, res, next) => {
-  SubCategorie.findAll()
+  SubCategorie.findAll({
+    include: {
+      model: Product,
+      as: 'Products',
+      attributes: ['id', 'name'],
+    },
+  })
     .then(function (subCategorie) {
       res.send(subCategorie);
     })

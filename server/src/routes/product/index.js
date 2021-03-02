@@ -180,6 +180,15 @@ router.put('/:productId', upload.array('pro_images'), function (req, res) {
     });
 });
 
+router.delete('/many', function (req, res, next) {
+  const { productIdArr } = req.body;
+  Product.destroy({ where: { id: productIdArr } })
+    .then(function () {
+      res.sendStatus(204);
+    })
+    .catch(next);
+});
+
 router.delete('/:productId', function (req, res, next) {
   req.product
     .destroy()

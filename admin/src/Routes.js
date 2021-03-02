@@ -4,8 +4,8 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import AllProductsPage from './pages/product/AllProductsPage';
 import AddProductPage from './pages/product/AddProductPage';
-import Categories from './pages/product/Categories';
-import SubCategories from './pages/product/SubCategories';
+import CategoriesPage from './pages/product/CategoriesPage';
+import SubCategoriePage from './pages/product/SubCategoriesPage';
 
 const Routes = () => {
   return (
@@ -18,11 +18,15 @@ const Routes = () => {
           exact
           component={AddProductPage}
         />
-        <Route path="/pages/products/catories" exact component={Categories} />
+        <Route
+          path="/pages/products/categories"
+          exact
+          component={CategoriesPage}
+        />
         <Route
           path="/pages/products/sub-categories"
           exact
-          component={SubCategories}
+          component={SubCategoriePage}
         />
       </Switch>
     </BrowserRouter>
