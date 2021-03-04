@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
-
+import moment from 'moment'
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectProducts } from '../../redux/product/product.selectors';
-import { fetchProductStart } from '../../redux/product/product.actions'
+import { fetchProductsStart } from '../../redux/product/product.actions'
 
+
+import Image from '../../components/Image/Image'
 
 const useStyles = makeStyles(theme => ({
     my3: {
@@ -26,6 +29,15 @@ const useStyles = makeStyles(theme => ({
 
 const columns = [
     {
+        name: "id",
+        label: "Id",
+        options: {
+            filter: true,
+            sort: true,
+            display: 'excluded'
+        }
+    },
+    {
         name: "name",
         label: "Name",
         options: {
@@ -33,14 +45,19 @@ const columns = [
             sort: true
         }
     },
-    // {
-    //     name: "imageArray",
-    //     label: "ImageArray",
-    //     options: {
-    //         filter: false,
-    //         sort: false
-    //     }
-    // },
+    {
+        name: "imageArray",
+        label: "Image",
+        options: {
+            filter: false,
+            sort: false,
+            customBodyRender: (value, tableMeta, updateValue) => {
+                return <Image value={value} size='small' />
+            }
+
+        }
+    },
+
     {
         name: "highlights",
         label: "Highlights",
@@ -70,24 +87,44 @@ const columns = [
         label: "CreatedAt",
         options: {
             filter: true,
-            sort: true
+            sort: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+
+                return (
+                    <div>
+                        <Typography variant='body1'>
+                            {moment(value).calendar()}
+                        </Typography>
+                        <Typography variant='caption'>
+                            {moment(value).fromNow()}
+                        </Typography>
+                    </div>)
+            }
         }
     }
 ];
 
 
 
-const options = {
-    filterType: "checkbox"
-};
+
 
 const AllProductsPage = props => {
-    const { history, products, fetchProductStart } = props;
+    const { products, fetchProductStart } = props;
     const classes = useStyles();
-
+    const history = useHistory();
     useEffect(() => {
         fetchProductStart()
     }, [fetchProductStart]);
+
+    const options = {
+        filterType: "checkbox",
+        onRowClick: (rowData) => {
+            history.push(`/pages/products/show/${rowData[0]}`)
+        },
+        onRowsDelete: (data) => {
+            console.log(data);
+        }
+    };
 
     return (
         <Layout>
@@ -125,7 +162,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchProductStart: () => dispatch(fetchProductStart())
+    fetchProductStart: () => dispatch(fetchProductsStart())
+
 });
 
 

@@ -40,7 +40,7 @@ const AddProductPage = props => {
     const editor = useRef(null);
     const [bodyPost, setBodyPost] = useState("");
 
-    const { history } = props;
+
     const classes = useStyles();
 
     return (

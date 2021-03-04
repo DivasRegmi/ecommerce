@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+const getProductById = (id) => {
+  return axios.get(`/api/product/${id}`);
+};
+
 const getAllProducts = () => {
   return axios.get('/api/product/');
 };
@@ -16,4 +20,10 @@ const deleteProduct = (product) => {
   return axios.delete(`/api/product/${product.id}`);
 };
 
-export { getAllProducts, postProduct, editProduct, deleteProduct };
+export {
+  getProductById,
+  getAllProducts,
+  postProduct,
+  editProduct,
+  deleteProduct,
+};

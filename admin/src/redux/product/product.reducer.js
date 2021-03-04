@@ -2,27 +2,35 @@ import ProductActionTypes from './product.types';
 
 const INITIAL_STATE = {
   products: [''],
-  isFetching: false,
+  product: null,
+  isLoading: false,
   errorMessage: undefined,
 };
 
 const shopReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ProductActionTypes.FETCH_PRODUCTS_START:
+    case ProductActionTypes.FETCH_PRODUCT_START:
       return {
         ...state,
-        isFetching: true,
+        isLoading: true,
+      };
+    case ProductActionTypes.FETCH_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        product: action.payload,
       };
     case ProductActionTypes.FETCH_PRODUCTS_SUCCESS:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         products: action.payload,
       };
-    case ProductActionTypes.FETCH_PRODUCTS_FAILURE:
+    case ProductActionTypes.API_PRODUCTS_FAILURE:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         errorMessage: action.payload,
       };
     default:

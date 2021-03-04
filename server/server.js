@@ -3,7 +3,8 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const passport = require('passport');
-const cors = require('cors');
+const path = require('path');
+// const cors = require('cors');
 
 const { sequelize } = require('./src/models/index');
 const sessionConfig = require('./config/session');
@@ -65,6 +66,7 @@ app.use(
  * init Router
  */
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', require('./src/routes'));
 
 /* ***************************** */
