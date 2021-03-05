@@ -9,21 +9,21 @@ import NavGroup from "./sections/NavGroup";
 import NavCollapse from "./sections/NavCollapse";
 import NavItem from "./sections/NavItem";
 import NavLink from "./sections/NavLink";
-import { Typography } from "@material-ui/core";
+import { ReactComponent as LogoSVG } from '../../assets/logo.svg';
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   logoBg: {
-    backgroundColor: theme.palette.type !== "dark" && "#18202c",
-    // backgroundColor: "#18202c"
+    backgroundColor: theme.palette.type !== "dark" && "#18202c"
+  },
+  center: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   logo: {
     padding: "1rem",
-    "& span": {
-      display: "block",
-      color: "rgba(41, 113, 245, 0.87)",
-    },
   },
   navCustom: {
     "& .MuiTypography-root": {
@@ -43,26 +43,8 @@ const Navigation = (props) => {
 
   return (
     <div>
-      <div className={clsx(classes.toolbar, classes.logoBg)}>
-        <Typography
-          className={classes.logo}
-          variant="h6"
-          component="h1"
-          align="center"
-        >
-          &copy;
-          <span>React Admin</span>
-        </Typography>
-        <iframe
-          title="star repo"
-          src="https://ghbtns.com/github-btn.html?user=mohammad&repo=-react-admin&type=star&size=large"
-          frameworker="0"
-          scrolling="0"
-          width="75px"
-          height="30px"
-          frameBorder="none"
-          style={{ margin: "0 0 20px 80px" }}
-        />
+      <div className={clsx(classes.toolbar, classes.logoBg, classes.center)}>
+        <LogoSVG className={classes.logo} height='200px' />
       </div>
       <Divider />
       <List className={classes.navCustom}>

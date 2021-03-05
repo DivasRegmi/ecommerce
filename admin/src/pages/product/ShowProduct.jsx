@@ -24,8 +24,8 @@ function ShowProduct(props) {
 
 
     // useEffect(() => {
+    //     console.log('*********************');
     //     fetchProductStart(productId)
-
     // }, [fetchProductStart, productId]);
 
     return (

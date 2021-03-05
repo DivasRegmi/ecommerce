@@ -1,98 +1,364 @@
-import React, { useState, useRef } from "react";
-import JoditEditor from "jodit-react";
-
-// import { EditorState, convertToRow } from "draft-js";
-// import { Editor } from "react-draft-wysiwyg";
-// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import React, { useState } from "react";
 
 import Layout from "../../components/Layout/Layout";
-import { Typography, Grid, makeStyles, TextField } from "@material-ui/core";
-// import AddPostRightPanels from "../../../components/extra/AddPostRightPanels/AddPostRightPanels";
+
+import { Typography, makeStyles, TextField, InputAdornment, Paper, Button } from "@material-ui/core";
+
 
 const useStyles = makeStyles(theme => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
     },
-    my3: {
-        margin: "1.3rem 0"
+    form: {
+        padding: '10px',
+
     },
-    mb3: {
-        margin: "1.3rem 0"
+    formSection: {
+        [theme.breakpoints.up("sm")]: {
+            display: 'flex'
+        },
     },
-    mb0: {
-        marginBottom: 0
+    textField: {
+        paddingLeft: "10px"
     },
-    mRight: {
-        marginRight: ".85rem"
+    title: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2)
     },
-    p1: {
-        padding: ".85rem"
+    formTitle: {
+        margin: theme.spacing(1)
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+    imagePreview: {
+        width: '100%',
+        display: 'flex',
+        flexWrap: 'wrap',
+        '& > div': {
+            padding: '10px',
+            '& > img': {
+                width: '166px',
+                height: 'auto'
+            }
+        }
+
+    },
+    btnImageUpload: {
+        margin: '10px'
     }
-    // demoEditor: {
-    //   border: "1px solid #eee",
-    //   padding: "5px",
-    //   borderRadius: "2px",
-    //   height: "350px"
-    // }
+
 }));
 
-const AddProductPage = props => {
-    const editor = useRef(null);
-    const [bodyPost, setBodyPost] = useState("");
-
-
+const AddProductPage = (props) => {
     const classes = useStyles();
+    const [product, setProduct] = useState({
+        name: '',
+        brand: '',
+        subCategorie: '',
+        costPrice: '',
+        markedPrice: '',
+        discount: '',
+        totalProduct: '',
+        highlight: '',
+        description: ''
+    });
+
+    const [images, setImages] = useState({
+        imageFile: null,
+        imagePreview: '',
+    })
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProduct({ ...product, [name]: [value] });
+
+        // if (errors.err) {
+        //     setErrors({
+        //         ...errors,
+        //         err: false,
+        //         [name]: "",
+        //     });
+        // }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log('subbmit');
+        console.log(product);
+        // const user = {
+        //     email: userCrediential.email.toString(),
+        //     password: userCrediential.password.toString(),
+        // };
+
+        // logIn(user);
+
+        // if (errors.email) {
+        //     setUserCrediential({ ...userCrediential, email: "" });
+        // }
+
+        // if (errors.password) {
+        //     setUserCrediential({ ...userCrediential, password: "" });
+        // }
+    };
+
+    const handleImagePreview = (e) => {
+        const { files } = e.target
+        console.log(files);
+        let imageAsBase64 = Object.values(files).map((file) => {
+            console.log(file)
+            return URL.createObjectURL(file)
+        }
+        )
+        let imageAsFiles = e.target.files;
+
+
+
+        setImages({
+            imageFile: imageAsFiles,
+            imagePreview: imageAsBase64
+        })
+    }
+
+    const imagePreview = () => {
+        const { imageFile, imagePreview } = images
+        let div = []
+        if (imagePreview && imageFile) {
+
+            for (let i = 0; i < imagePreview.length; i++) {
+                const component = <div>
+                    <img src={imagePreview[i]} alt="product" />
+                    < Typography variant='subtitle1' >
+                        {imageFile[i].name}</Typography >
+                </div >
+
+                div.push(component)
+
+            }
+
+        }
+        return div
+    }
 
     return (
         <Layout>
-            <Typography className={classes.mb3} variant="h5" component="h1">
+            <Typography className={classes.title} variant="h5" component="h1">
                 Add New Post
-      </Typography>
-            {/* <OftadehBreadcrumbs path={history} /> */}
-            <div className={classes.root}>
-                <Grid container spacing={3}>
-                    <Grid container item xs={12} md={8}>
-                        <Grid item xs={12}>
+                 </Typography>
+
+            <Paper >
+                <div className={classes.root}>
+                    <form className={classes.form} noValidate autoComplete="off" onSubmit={handleSubmit}>
+
+                        <div>
+                            <Typography variant='h6' xs='12'>
+                                Name
+                            </Typography>
+                            <div className={classes.formSection}>
+                                <TextField
+                                    id='name'
+                                    className={classes.textField}
+                                    helperText="Product name*"
+                                    margin="normal"
+                                    variant='outlined'
+                                    size='small'
+                                    fullWidth
+                                    required
+                                    name="name"
+                                    value={product.name}
+                                    autoFocus
+                                    onChange={handleChange}
+                                />
+                                <TextField
+                                    id='brand'
+                                    className={classes.textField}
+                                    helperText="Brand name"
+                                    margin="normal"
+                                    variant='outlined'
+                                    size='small'
+                                    fullWidth
+                                    name="brand"
+                                    value={product.brand}
+                                    autoFocus
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <Typography variant='h6'>
+                                Categorie
+                            </Typography>
                             <TextField
-                                id="standard-full-width"
-                                label="Add New Post"
-                                className={classes.mb3}
-                                placeholder="Enter title here"
-                                fullWidth
+                                id='subCategorie'
+                                className={classes.textField}
+                                helperText='Sub Categorie*'
                                 margin="normal"
-                                InputLabelProps={{
-                                    shrink: true
-                                }}
+                                variant='outlined'
+                                size='small'
+                                fullWidth
+                                required
+                                name="subCategorie"
+                                value={product.subCategorie}
+                                autoFocus
+                                onChange={handleChange}
                             />
-                        </Grid>
-                        <Grid item xs={12}>
-                            {/* <Editor
-            editorState={bodyPost}
-            wrapperClassName="demo-wrapper"
-            editorClassName={classes.demoEditor}
-            onEditorStateChange={value => setBodyPost(value)}
-          /> */}
-                            <JoditEditor
-                                ref={editor}
-                                value={bodyPost}
-                                config={{
-                                    readonly: false,
-                                    style: {
-                                        height: "350px"
-                                    }
-                                }}
-                                tabIndex={1}
-                                onBlur={value => setBodyPost(value)}
-                                onChange={value => { }}
+                        </div>
+                        <div>
+                            <Typography variant='h6'>
+                                Price
+                            </Typography>
+                            <div className={classes.formSection}>
+                                <TextField
+                                    id='costPrice'
+                                    className={classes.textField}
+                                    helperText='Cost Price*'
+                                    margin="normal"
+                                    variant='outlined'
+                                    size='small'
+                                    fullWidth
+                                    required
+                                    name="costPrice"
+                                    value={product.costPrice}
+                                    autoFocus
+                                    onChange={handleChange}
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">Rs</InputAdornment>,
+                                    }}
+                                />
+                                <TextField
+                                    id='markedPrice'
+                                    className={classes.textField}
+                                    helperText='Marked Price*'
+                                    margin="normal"
+                                    variant='outlined'
+                                    size='small'
+                                    fullWidth
+                                    required
+                                    name="markedPrice"
+                                    value={product.markedPrice}
+                                    autoFocus
+                                    onChange={handleChange}
+                                    InputProps={{
+                                        startAdornment: <InputAdornment position="start">Rs</InputAdornment>,
+                                    }}
+                                />
+                                <TextField
+                                    id='discount'
+                                    className={classes.textField}
+                                    helperText='Discount Percent'
+                                    margin="normal"
+                                    variant='outlined'
+                                    size='small'
+                                    fullWidth
+                                    required
+                                    name="discount"
+                                    value={product.discount}
+                                    autoFocus
+                                    onChange={handleChange}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                    }}
+
+                                />
+                            </div>
+
+                        </div>
+                        <div>
+                            <Typography variant='h6'>
+                                Product Number
+                            </Typography>
+                            <TextField
+                                id='totalProduct'
+                                className={classes.textField}
+                                helperText='No. of Product'
+                                margin="normal"
+                                variant='outlined'
+                                size='small'
+                                fullWidth
+                                name="totalProduct"
+                                value={product.totalProduct}
+                                autoFocus
+                                onChange={handleChange}
                             />
-                        </Grid>
-                    </Grid>
-                    {/* <Grid item xs={12} md={4}>
-                        <AddPostRightPanels />
-                    </Grid> */}
-                </Grid>
-            </div>
-        </Layout>
+                        </div>
+                        <div>
+                            <Typography variant='h6'>
+                                Highlight
+                            </Typography>
+                            <TextField
+                                id='highlight'
+                                className={classes.textField}
+                                helperText='Product highlight (comma seperated)'
+                                margin="normal"
+                                variant='outlined'
+                                size='small'
+                                fullWidth
+                                name="highlight"
+                                value={product.highlight}
+                                autoFocus
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <Typography variant='h6'>
+                                Description
+                            </Typography>
+                            <TextField
+                                id='description'
+                                className={classes.textField}
+                                helperText='Product Description'
+                                margin="normal"
+                                variant='outlined'
+                                size='small'
+                                fullWidth
+                                multiline
+                                name="description"
+                                value={product.description}
+                                autoFocus
+                                onChange={handleChange} />
+                        </div>
+
+                        <div>
+                            <Typography variant='h6'>
+                                Product Images
+                            </Typography>
+
+                            <Button
+                                variant="contained"
+                                component="label"
+                                color="primary"
+                                className={classes.btnImageUpload}
+                            >
+                                Upload
+                                 <input
+                                    type="file"
+                                    hidden
+                                    onChange={handleImagePreview}
+                                    multiple
+                                />
+                            </Button>
+
+                            <div className={classes.imagePreview}>
+                                {images.imagePreview && imagePreview()}
+                            </div>
+                        </div>
+
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            submit
+                       </Button>
+
+                    </form>
+
+
+                </div >
+            </Paper>
+        </Layout >
     );
 };
 

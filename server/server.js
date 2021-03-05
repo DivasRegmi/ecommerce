@@ -66,7 +66,10 @@ app.use(
  * init Router
  */
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  express.static(path.join(__dirname, 'public'), { maxAge: 3600000 * 24 })
+);
+
 app.use('/api', require('./src/routes'));
 
 /* ***************************** */

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { Sequelize, Product, Review, SubCategorie } = require('../../models');
 
+const validateProductInput = require('../../validation/product');
 const upload = require('../../middlewares/multer');
 
 const { Op } = Sequelize;
@@ -98,6 +99,13 @@ router.post('/', upload.array('pro_images'), (req, res, next) => {
     discountPercent,
   } = req.body;
 
+  const { errors, isValid } = validateProductInput(req.body);
+
+  // Check for erors
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const imageArray = [];
 
   for (let i = 0; i < req.files.length; i++) {
@@ -113,23 +121,38 @@ router.post('/', upload.array('pro_images'), (req, res, next) => {
   })
     .then((subcategorie) => {
       if (!subcategorie) {
-        return res.status(404).json({ message: 'SubCategorie not found' });
+        errors.subCategorie = 'SubCategorie not found';
+        return res.status(404).json(errors);
       }
-      Product.create({
-        name,
-        brand,
-        discription,
-        highlights,
-        isOutOfStock,
-        costPrice,
-        markedPrice,
-        discountPercent,
-        imageArray: imageArray.toString(),
-        subCategorieId: subcategorie.id,
-        rating: 0,
+
+      Product.findOne({
+        where: {
+          name: name,
+        },
       })
-        .then(function (product) {
-          res.send(product);
+        .then((product) => {
+          if (product) {
+            errors.name = 'Name already exist';
+            return res.status(404).json(errors);
+          }
+
+          Product.create({
+            name,
+            brand,
+            discription,
+            highlights,
+            isOutOfStock,
+            costPrice,
+            markedPrice,
+            discountPercent,
+            imageArray: imageArray.toString(),
+            subCategorieId: subcategorie.id,
+            rating: 0,
+          })
+            .then(function (newProduct) {
+              res.send(newProduct);
+            })
+            .catch((err) => next(err));
         })
         .catch((err) => next(err));
     })
