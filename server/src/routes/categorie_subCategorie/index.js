@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { Categorie, SubCategorie, Product } = require('../../models');
 const validateCategorieInput = require('../../validation/categorie');
+const validateSubCategorieInput = require('../../validation/subcategorie ');
 
 router.param('categorieId', function (req, res, next, categorieId) {
   Categorie.findByPk(categorieId)
@@ -108,6 +109,11 @@ router.post('/', (req, res, next) => {
 // create new subCategorie
 router.post('/subCategorie', (req, res, next) => {
   const { name, categorieId } = req.body;
+  const { errors, isValid } = validateSubCategorieInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   SubCategorie.create({
     name,
     categorieId,

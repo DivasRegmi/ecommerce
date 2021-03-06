@@ -21,6 +21,9 @@ module.exports = function validateProductInput(data) {
   if (parseInt(data.costPrice, 10) < 0) {
     errors.costPrice = 'CostPrice field must be grater than 0';
   }
+  if (parseInt(data.costPrice, 10) > parseInt(data.markedPrice, 10)) {
+    errors.markedPrice = 'MakedPrice should not be grater than CostPrice';
+  }
 
   return {
     errors,

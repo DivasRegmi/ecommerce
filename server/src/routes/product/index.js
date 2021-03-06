@@ -107,9 +107,11 @@ router.post('/', upload.array('pro_images'), (req, res, next) => {
   }
 
   const imageArray = [];
-
+  console.log(req.body);
+  console.log(req.files);
   for (let i = 0; i < req.files.length; i++) {
     const element = req.files[i];
+    console.log(element);
     imageArray.push(element.filename);
   }
 

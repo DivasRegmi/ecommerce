@@ -34,7 +34,7 @@ module.exports = {
       },
 
       imageArray: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       rating: {
         type: Sequelize.INTEGER,

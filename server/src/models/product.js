@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
 
       imageArray: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         get() {
           const rawValue = this.getDataValue('imageArray');
           return rawValue ? rawValue.split(',') : null;
@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
           const mp = parseInt(this.getDataValue('markedPrice'), 10);
           const dp = parseInt(this.getDataValue('discountPercent'), 10);
           const sp = mp - (dp / 100) * mp;
-          return sp;
+          return dp ? sp : mp;
         },
         set() {
           throw new Error('Do not try to set the `seelingPrice` value!');
