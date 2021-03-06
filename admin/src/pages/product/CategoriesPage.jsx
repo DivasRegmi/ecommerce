@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
-import Layout from "../../components/Layout/Layout";
-import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
+import { Typography, Grid, makeStyles } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
+import moment from 'moment'
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectCategories } from "../../redux/categorie/categorie.selectors";
 import { fetchCategorieStart } from '../../redux/categorie/categorie.actions'
+
+import Layout from "../../components/Layout/Layout";
+import AddCategorie from '../../components/Categories/AddCategorie'
 
 
 const useStyles = makeStyles(theme => ({
@@ -38,7 +41,19 @@ const columns = [
         label: "CreatedAt",
         options: {
             filter: false,
-            sort: true
+            sort: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+
+                return (
+                    <div>
+                        <Typography variant='body1'>
+                            {moment(value).calendar()}
+                        </Typography>
+                        <Typography variant='caption'>
+                            {moment(value).fromNow()}
+                        </Typography>
+                    </div>)
+            }
         }
     }
 ];
@@ -66,6 +81,7 @@ const CategoriePage = props => {
                      </Typography>
                 </Grid>
             </Grid>
+            <AddCategorie categories={categories} />
             <MUIDataTable
                 title={"Categorie List"}
                 data={categories}

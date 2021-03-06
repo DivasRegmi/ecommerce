@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import Layout from "../../components/Layout/Layout";
-import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
+import { Typography, Grid, makeStyles } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectSubCategories } from "../../redux/categorie/categorie.selectors";
 import { fetchSubCategorieStart } from '../../redux/categorie/categorie.actions'
-
+import Layout from "../../components/Layout/Layout";
+import AddSubCategorie from '../../components/Categories/AddSubCategorie';
 
 const useStyles = makeStyles(theme => ({
     my3: {
@@ -25,6 +25,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const columns = [
+    {
+        name: "id",
+        label: "Id",
+        options: {
+            filter: false,
+            sort: false,
+            display: 'excluded'
+        }
+    },
     {
         name: "name",
         label: "Name",
@@ -66,6 +75,7 @@ const SubCategoriePage = props => {
                      </Typography>
                 </Grid>
             </Grid>
+            <AddSubCategorie />
             <MUIDataTable
                 title={"SubCategorie List"}
                 data={subCategories}

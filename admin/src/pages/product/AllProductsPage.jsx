@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
+import { Autocomplete } from '@material-ui/lab';
 import MUIDataTable from "mui-datatables";
 import moment from 'moment'
 import { connect } from 'react-redux';
@@ -32,8 +33,8 @@ const columns = [
         name: "id",
         label: "Id",
         options: {
-            filter: true,
-            sort: true,
+            filter: false,
+            sort: false,
             display: 'excluded'
         }
     },

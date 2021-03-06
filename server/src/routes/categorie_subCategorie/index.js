@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Categorie, SubCategorie, Product } = require('../../models');
+const validateCategorieInput = require('../../validation/categorie');
 
 router.param('categorieId', function (req, res, next, categorieId) {
   Categorie.findByPk(categorieId)
@@ -46,11 +47,18 @@ router.get('/', (req, res, next) => {
 });
 router.get('/subCategorie', (req, res, next) => {
   SubCategorie.findAll({
-    include: {
-      model: Product,
-      as: 'Products',
-      attributes: ['id', 'name'],
-    },
+    include: [
+      {
+        model: Product,
+        as: 'Products',
+        attributes: ['id', 'name'],
+      },
+      {
+        model: Categorie,
+        as: 'Categorie',
+        attributes: ['id', 'name'],
+      },
+    ],
   })
     .then(function (subCategorie) {
       res.send(subCategorie);
@@ -73,10 +81,26 @@ router.get('/:subCategorieId', (req, res, next) => {
 // Create new categorie
 router.post('/', (req, res, next) => {
   const { name } = req.body;
-  console.log(name, req.body.name);
-  Categorie.create({ name })
-    .then(function (categorie) {
-      res.status(200).send(categorie);
+  const { errors, isValid } = validateCategorieInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+  Categorie.findOne({
+    where: {
+      name,
+    },
+  })
+    .then((categorie) => {
+      if (categorie) {
+        errors.name = 'Categorie already exist';
+        return res.status(400).json(errors);
+      }
+      Categorie.create({ name })
+        .then(function (newCategorie) {
+          res.status(200).send(newCategorie);
+        })
+        .catch(next);
     })
     .catch(next);
 });

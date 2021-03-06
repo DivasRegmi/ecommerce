@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Layout from "../../components/Layout/Layout";
-
+import { Autocomplete } from '@material-ui/lab';
 import { Typography, makeStyles, TextField, InputAdornment, Paper, Button } from "@material-ui/core";
 
+
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { selectSubCategories } from "../../redux/categorie/categorie.selectors";
+import { fetchSubCategorieStart } from '../../redux/categorie/categorie.actions'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -50,8 +55,9 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-const AddProductPage = (props) => {
+const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
     const classes = useStyles();
+    const [subCategorie, setSubCategorie] = useState(null)
     const [product, setProduct] = useState({
         name: '',
         brand: '',
@@ -63,6 +69,10 @@ const AddProductPage = (props) => {
         highlight: '',
         description: ''
     });
+
+    useEffect(() => {
+        fetchSubCategorieStart()
+    }, [fetchSubCategorieStart]);
 
     const [images, setImages] = useState({
         imageFile: null,
@@ -84,22 +94,8 @@ const AddProductPage = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('subbmit');
-        console.log(product);
-        // const user = {
-        //     email: userCrediential.email.toString(),
-        //     password: userCrediential.password.toString(),
-        // };
 
-        // logIn(user);
 
-        // if (errors.email) {
-        //     setUserCrediential({ ...userCrediential, email: "" });
-        // }
-
-        // if (errors.password) {
-        //     setUserCrediential({ ...userCrediential, password: "" });
-        // }
     };
 
     const handleImagePreview = (e) => {
@@ -188,6 +184,29 @@ const AddProductPage = (props) => {
                             <Typography variant='h6'>
                                 Categorie
                             </Typography>
+                            <Autocomplete
+                                id="autocomplete"
+                                fullWidth
+                                options={subCategories}
+                                getOptionLabel={(option) => option.name}
+                                value={subCategorie}
+                                onChange={(event, newValue) => {
+                                    setSubCategorie(newValue);
+                                }}
+                                getOptionSelected={(option, value) => option.id === value.id}
+                                renderInput={(params) => {
+                                    console.log(params);
+                                    return <TextField {...params} id='categorie'
+                                        className={classes.textField}
+                                        margin="normal"
+                                        variant='outlined'
+                                        helperText='Categorie'
+                                        size='small'
+                                        required
+                                        fullWidth
+                                        autoFocus />
+                                }}
+                            />
                             <TextField
                                 id='subCategorie'
                                 className={classes.textField}
@@ -362,6 +381,16 @@ const AddProductPage = (props) => {
     );
 };
 
+const mapStateToProps = createStructuredSelector({
+    subCategories: selectSubCategories
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    fetchSubCategorieStart: () => dispatch(fetchSubCategorieStart())
+});
 
 
-export default AddProductPage;
+export default connect(mapStateToProps, mapDispatchToProps)(AddProductPage);
+
+
+
