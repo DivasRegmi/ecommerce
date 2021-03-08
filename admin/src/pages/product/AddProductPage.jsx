@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import Layout from "../../components/Layout/Layout";
 import { Autocomplete } from '@material-ui/lab';
 import { Typography, makeStyles, TextField, InputAdornment, Paper, Button } from "@material-ui/core";
@@ -9,6 +8,11 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectSubCategories } from "../../redux/categorie/categorie.selectors";
 import { fetchSubCategorieStart } from '../../redux/categorie/categorie.actions'
+import { postProductStart } from "../../redux/product/product.actions";
+import FormData from 'form-data'
+
+import { selectProductErrors } from "../../redux/product/product.selectors";
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -55,61 +59,77 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
+
+
+const AddProductPage = ({ subCategories, fetchSubCategorieStart, postProductStart, errors }) => {
     const classes = useStyles();
-    const [subCategorie, setSubCategorie] = useState(null)
-    const [product, setProduct] = useState({
+    const initialProduct = {
         name: '',
         brand: '',
-        subCategorie: '',
         costPrice: '',
         markedPrice: '',
-        discount: '',
+        discountPercent: '',
         totalProduct: '',
         highlight: '',
         description: ''
-    });
-
-    useEffect(() => {
-        fetchSubCategorieStart()
-    }, [fetchSubCategorieStart]);
-
+    }
+    const [subCategorie, setSubCategorie] = useState(null)
+    const [product, setProduct] = useState(initialProduct);
     const [images, setImages] = useState({
         imageFile: null,
         imagePreview: '',
     })
 
+    useEffect(() => {
+        fetchSubCategorieStart()
+    }, [fetchSubCategorieStart]);
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProduct({ ...product, [name]: [value] });
-
-        // if (errors.err) {
-        //     setErrors({
-        //         ...errors,
-        //         err: false,
-        //         [name]: "",
-        //     });
-        // }
+        setProduct({ ...product, [name]: value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let payload = { ...product }
+        if (subCategorie && subCategorie.name) {
+            payload = { ...product, subCategorie: subCategorie.name }
+        }
+        let formData = new FormData()
+
+        for (const key in payload) {
+            formData.append(key, payload[key]);
+        }
+        if (images.imageFile) {
+            Object.values(images.imageFile).forEach(file => {
+                formData.append("pro_images", file)
+            });
+
+        }
+
+        postProductStart(formData)
+        if (!errors) {
+            setProduct(initialProduct)
+            setSubCategorie(null)
+            setImages({
+                imageFile: null,
+                imagePreview: '',
+            })
+        }
+        window.scrollTo(0, 0)
 
 
     };
 
     const handleImagePreview = (e) => {
         const { files } = e.target
-        console.log(files);
+
         let imageAsBase64 = Object.values(files).map((file) => {
-            console.log(file)
             return URL.createObjectURL(file)
         }
         )
-        let imageAsFiles = e.target.files;
-
-
-
+        let imageAsFiles = files
         setImages({
             imageFile: imageAsFiles,
             imagePreview: imageAsBase64
@@ -122,7 +142,7 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
         if (imagePreview && imageFile) {
 
             for (let i = 0; i < imagePreview.length; i++) {
-                const component = <div>
+                const component = <div key={i} >
                     <img src={imagePreview[i]} alt="product" />
                     < Typography variant='subtitle1' >
                         {imageFile[i].name}</Typography >
@@ -144,7 +164,7 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
 
             <Paper >
                 <div className={classes.root}>
-                    <form className={classes.form} noValidate autoComplete="off" onSubmit={handleSubmit}>
+                    <form className={classes.form} noValidate autoComplete="off" onSubmit={handleSubmit} encType="multipart/form-data">
 
                         <div>
                             <Typography variant='h6' xs='12'>
@@ -154,7 +174,6 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
                                 <TextField
                                     id='name'
                                     className={classes.textField}
-                                    helperText="Product name*"
                                     margin="normal"
                                     variant='outlined'
                                     size='small'
@@ -163,6 +182,8 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
                                     name="name"
                                     value={product.name}
                                     autoFocus
+                                    helperText={errors && errors.name ? errors.name : "Product name*"}
+                                    error={errors && !!errors.name}
                                     onChange={handleChange}
                                 />
                                 <TextField
@@ -195,32 +216,19 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
                                 }}
                                 getOptionSelected={(option, value) => option.id === value.id}
                                 renderInput={(params) => {
-                                    console.log(params);
                                     return <TextField {...params} id='categorie'
                                         className={classes.textField}
                                         margin="normal"
                                         variant='outlined'
-                                        helperText='Categorie'
+                                        helperText={errors && errors.subCategorie ? errors.subCategorie : "SubCategorie*"}
+                                        error={errors && !!errors.subCategorie}
                                         size='small'
                                         required
                                         fullWidth
                                         autoFocus />
                                 }}
                             />
-                            <TextField
-                                id='subCategorie'
-                                className={classes.textField}
-                                helperText='Sub Categorie*'
-                                margin="normal"
-                                variant='outlined'
-                                size='small'
-                                fullWidth
-                                required
-                                name="subCategorie"
-                                value={product.subCategorie}
-                                autoFocus
-                                onChange={handleChange}
-                            />
+
                         </div>
                         <div>
                             <Typography variant='h6'>
@@ -230,7 +238,7 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
                                 <TextField
                                     id='costPrice'
                                     className={classes.textField}
-                                    helperText='Cost Price*'
+                                    type='number'
                                     margin="normal"
                                     variant='outlined'
                                     size='small'
@@ -238,6 +246,8 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
                                     required
                                     name="costPrice"
                                     value={product.costPrice}
+                                    helperText={errors && errors.costPrice ? errors.costPrice : "Cost Price*"}
+                                    error={errors && !!errors.costPrice}
                                     autoFocus
                                     onChange={handleChange}
                                     InputProps={{
@@ -247,7 +257,9 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
                                 <TextField
                                     id='markedPrice'
                                     className={classes.textField}
-                                    helperText='Marked Price*'
+                                    type='number'
+                                    helperText={errors && errors.markedPrice ? errors.markedPrice : "Marked Price*"}
+                                    error={errors && !!errors.markedPrice}
                                     margin="normal"
                                     variant='outlined'
                                     size='small'
@@ -262,16 +274,17 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
                                     }}
                                 />
                                 <TextField
-                                    id='discount'
+                                    id='discountPercent'
                                     className={classes.textField}
                                     helperText='Discount Percent'
+                                    type='number'
                                     margin="normal"
                                     variant='outlined'
                                     size='small'
                                     fullWidth
                                     required
-                                    name="discount"
-                                    value={product.discount}
+                                    name="discountPercent"
+                                    value={product.discountPercent}
                                     autoFocus
                                     onChange={handleChange}
                                     InputProps={{
@@ -382,11 +395,13 @@ const AddProductPage = ({ subCategories, fetchSubCategorieStart }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-    subCategories: selectSubCategories
+    subCategories: selectSubCategories,
+    errors: selectProductErrors
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchSubCategorieStart: () => dispatch(fetchSubCategorieStart())
+    fetchSubCategorieStart: () => dispatch(fetchSubCategorieStart()),
+    postProductStart: (product) => dispatch(postProductStart(product))
 });
 
 

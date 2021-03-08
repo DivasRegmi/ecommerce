@@ -15,18 +15,15 @@ const useStyle = makeStyles(theme => ({
 })
 )
 
+
+
 const WithSpinner = WrappedComponent => {
   const Spinner = ({ isLoading, ...otherProps }) => {
     const classes = useStyle()
-    console.log(isLoading);
-    console.log(otherProps);
     return isLoading ? (
-      <Layout>
-        <div className={classes.spinnerOverlay}>
-          <CircularProgress />
-        </div>
-      </Layout>
-
+      <div className={classes.spinnerOverlay}>
+        <CircularProgress />
+      </div>
     ) : (
         <WrappedComponent {...otherProps} />
       );

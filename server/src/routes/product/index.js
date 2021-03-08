@@ -14,10 +14,17 @@ router.param('productId', function (req, res, next, productId) {
         [Sequelize.fn('COUNT', Sequelize.col('reviews.userId')), 'n_ratting'],
       ],
     },
-    include: {
-      model: Review,
-      as: 'reviews',
-    },
+    include: [
+      {
+        model: Review,
+        as: 'reviews',
+      },
+      {
+        model: SubCategorie,
+        as: 'SubCategorie',
+        attributes: ['name'],
+      },
+    ],
   })
     .then((product) => {
       if (!product) {
@@ -33,7 +40,13 @@ router.param('productId', function (req, res, next, productId) {
 });
 
 router.get('/', (req, res, next) => {
-  Product.findAll()
+  Product.findAll({
+    include: {
+      model: SubCategorie,
+      as: 'SubCategorie',
+      attributes: ['name'],
+    },
+  })
     .then((product) => {
       if (!product) {
         return res.status(404).json({ message: 'Product Not Found' });

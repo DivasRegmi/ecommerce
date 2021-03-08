@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Typography, Grid, makeStyles } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
+import moment from 'moment';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -35,19 +36,57 @@ const columns = [
         }
     },
     {
+        name: "Categorie",
+        label: "Categorie",
+        options: {
+            filter: false,
+            sort: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+
+                return value ? <Typography key={value.id} style={{ display: 'block' }} variant='body'>{value.name}</Typography> : 'None'
+            }
+        }
+    },
+    {
         name: "name",
-        label: "Name",
+        label: "SubCategorie",
         options: {
             filter: false,
             sort: true
         }
     },
     {
+        name: "Products",
+        label: "Products",
+        options: {
+            filter: false,
+            sort: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+
+                return value ? value.map(data => <Typography key={data.id} style={{ display: 'block' }} variant='body'>{data.name}</Typography>) : 'None'
+            }
+        },
+
+    },
+
+    {
         name: "createdAt",
         label: "CreatedAt",
         options: {
             filter: false,
-            sort: true
+            sort: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+
+                return (
+                    <div>
+                        <Typography variant='body1'>
+                            {moment(value).calendar()}
+                        </Typography>
+                        <Typography variant='caption'>
+                            {moment(value).fromNow()}
+                        </Typography>
+                    </div>)
+            }
         }
     }
 ];

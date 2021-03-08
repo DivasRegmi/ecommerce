@@ -6,18 +6,38 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: props => {
+        minWidth: props => {
             const { size } = props
             if (size === 'small') {
-                return '66px';
+                return '77px';
             } else if (size === 'medium') {
-                return '300px';
+                return '150px';
+            } else if (size === 'large') {
+                return '400px';
+            } else {
+                return '300px'
+            }
+        },
+        maxWidth: props => {
+            const { size } = props
+            if (size === 'small') {
+                return '150px';
+            } else if (size === 'medium') {
+                return '200px';
             } else if (size === 'large') {
                 return '500px';
             } else {
-                return '250px'
+                return '400px'
             }
         },
+
+
+    },
+    img: {
+        border: '1px solid #ddd',
+        borderRadius: 4,
+        padding: 5,
+        width: '100%',
         height: 'auto'
     }
 }));
@@ -31,7 +51,9 @@ function Image(props) {
 
 
     return (
-        <img className={classes.root} src={image} alt={value} />
+        <div className={classes.root}>
+            <img className={classes.img} src={image} alt={value} />
+        </div>
     )
 }
 

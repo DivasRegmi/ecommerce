@@ -37,6 +37,19 @@ const columns = [
         }
     },
     {
+        name: "SubCategories",
+        label: "SubCategories",
+        options: {
+            filter: false,
+            sort: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+
+                return value ? value.map(data => <Typography key={data.id} style={{ display: 'block' }} variant='body'>{data.name}</Typography>) : 'None'
+            }
+        },
+
+    },
+    {
         name: "createdAt",
         label: "CreatedAt",
         options: {
@@ -71,6 +84,7 @@ const CategoriePage = props => {
     useEffect(() => {
         fetchCategorieStart()
     }, [fetchCategorieStart]);
+
 
     return (
         <Layout>

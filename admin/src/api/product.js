@@ -9,7 +9,9 @@ const getAllProducts = () => {
 };
 
 const postProduct = (product) => {
-  return axios.post('/api/product/', product);
+  return axios.post('/api/product/', product, {
+    headers: { 'content-type': 'multipart/form-data' },
+  });
 };
 
 const editProduct = (product) => {

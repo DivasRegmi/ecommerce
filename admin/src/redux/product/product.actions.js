@@ -5,9 +5,9 @@ export const fetchProductStart = (productName) => ({
   payload: productName,
 });
 
-export const fetchProductSuccess = (products) => ({
+export const fetchProductSuccess = (product) => ({
   type: ProductActionTypes.FETCH_PRODUCT_SUCCESS,
-  payload: products,
+  payload: product,
 });
 
 export const fetchProductsStart = () => ({
@@ -17,6 +17,14 @@ export const fetchProductsStart = () => ({
 export const fetchProductsSuccess = (products) => ({
   type: ProductActionTypes.FETCH_PRODUCTS_SUCCESS,
   payload: products,
+});
+export const postProductStart = (product) => ({
+  type: ProductActionTypes.POST_PRODUCT_START,
+  payload: product,
+});
+
+export const postProductSuccess = () => ({
+  type: ProductActionTypes.POST_PRODUCT_SUCCESS,
 });
 
 export const apiProductFailure = (errorMessage) => ({

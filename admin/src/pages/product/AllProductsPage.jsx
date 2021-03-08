@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import { Typography, Grid, Button, makeStyles } from "@material-ui/core";
-import { Autocomplete } from '@material-ui/lab';
 import MUIDataTable from "mui-datatables";
 import moment from 'moment'
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectProducts } from '../../redux/product/product.selectors';
+import { selectProductsForTabel } from '../../redux/product/product.selectors';
 import { fetchProductsStart } from '../../redux/product/product.actions'
 
 
@@ -68,21 +67,33 @@ const columns = [
         }
     },
     {
-        name: "costPrice",
-        label: "CostPrice",
+        name: "price",
+        label: "Price",
         options: {
             filter: true,
-            sort: true
+            sort: true,
+            customBodyRender: (value, tableMeta, updateValue) => {
+
+                return (
+                    <div>
+                        <Typography variant='body1'>
+                            C.P.: Rs {value.costPrice}
+                        </Typography>
+                        <Typography variant='body1'>
+                            M.P.: Rs {value.markedPrice}
+                        </Typography>
+                        <Typography variant='body1'>
+                            D.P.: {value.discountPercent} %
+                        </Typography>
+                        <Typography variant='body1'>
+                            S.P.: Rs {value.seelingPrice}
+                        </Typography>
+
+                    </div >)
+            }
         }
     },
-    {
-        name: "seelingPrice",
-        label: "SP",
-        options: {
-            filter: true,
-            sort: true
-        }
-    },
+
     {
         name: "createdAt",
         label: "CreatedAt",
@@ -117,6 +128,8 @@ const AllProductsPage = props => {
         fetchProductStart()
     }, [fetchProductStart]);
 
+    console.log(products);
+
     const options = {
         filterType: "checkbox",
         onRowClick: (rowData) => {
@@ -138,7 +151,7 @@ const AllProductsPage = props => {
 
                 <Grid item>
                     <Button
-                        onClick={() => history.push("/pages/posts/add-post")}
+                        onClick={() => history.push("/pages/products/add-product")}
                         variant="outlined"
                         color="primary"
                         size="small"
@@ -159,7 +172,7 @@ const AllProductsPage = props => {
 
 
 const mapStateToProps = createStructuredSelector({
-    products: selectProducts
+    products: selectProductsForTabel
 });
 
 const mapDispatchToProps = (dispatch) => ({

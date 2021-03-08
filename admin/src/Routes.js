@@ -1,17 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Home from './pages/Home';
 import AllProductsPage from './pages/product/AllProductsPage';
 import AddProductPage from './pages/product/AddProductPage';
 import CategoriesPage from './pages/product/CategoriesPage';
 import SubCategoriePage from './pages/product/SubCategoriesPage';
-import ShowProduct from './pages/product/ShowProduct';
+import ShowProductContainer from './pages/product/ShowProduct/ShowProductContainer';
+import DashBoard from './pages/dashbord/DashBoard';
 const Routes = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/" exact component={Home} />
+        <Route path="/" exact component={DashBoard} />
         <Route path="/pages/products" exact component={AllProductsPage} />
         <Route
           path="/pages/products/add-product"
@@ -31,7 +31,7 @@ const Routes = () => {
         <Route
           path="/pages/products/show/:product"
           exact
-          component={ShowProduct}
+          component={ShowProductContainer}
         />
       </Switch>
     </BrowserRouter>
