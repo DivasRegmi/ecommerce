@@ -5,6 +5,8 @@ import Cart from '../../components/Cart/Cart'
 
 import { makeStyles } from '@material-ui/core';
 
+import CostumerChart from '../../components/Chart/CostumerChart';
+
 
 
 const useStyle = makeStyles(theme => ({
@@ -31,8 +33,9 @@ const DashBoard = () => {
                 <Cart title='8,654' subTitle='Orders' decrease='2.40' />
                 <Cart title='87,000' subTitle='Customers' decrease='1.56' />
                 <Cart title='+6.50%' subTitle='Growth' icon='outbound' growth='5.50' />
-
             </div>
+
+            <CostumerChart />
         </Layout>
     );
 }

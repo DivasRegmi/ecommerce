@@ -71,8 +71,8 @@ const AvatarMenu = props => {
             variant="dot"
           >
             <Avatar
-              alt="Mohammad "
-              src="https://lh5.googleusercontent.com/-WqhFe4eMggE/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rdFUa5CK9Wi6g5qd8ZUt6apKFYSwA/photo.jpg?sz=328"
+              alt="Divas "
+              src="http://localhost:3000/images/website-img/divas.JPG"
             />
           </AvatarBadge>
         </ListItemAvatar>
@@ -81,7 +81,7 @@ const AvatarMenu = props => {
             primary={
               <React.Fragment>
                 <Typography component="span" variant="subtitle2">
-                  Mohammad
+                  Divas
                 </Typography>
               </React.Fragment>
             }

@@ -1,6 +1,6 @@
 import React from 'react';
 import Rating from '@material-ui/lab/Rating';
-import { makeStyles, Typography, Grid, Box, Card } from "@material-ui/core";
+import { makeStyles, Typography, Box, } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     root: {

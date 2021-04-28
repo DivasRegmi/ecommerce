@@ -8,7 +8,6 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import { InputBase, Badge } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import MailIcon from "@material-ui/icons/Mail";
-import TodayIcon from "@material-ui/icons/Today";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -73,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
     },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
         transition: theme.transitions.create("width"),
         width: "100%",
@@ -83,11 +81,8 @@ const useStyles = makeStyles((theme) => ({
     },
     appbarSection: {
         display: "flex",
-        // display: "none",
         alignItems: "center",
-        // [theme.breakpoints.up("sm")]: {
-        //   display: "flex"
-        // }
+
     },
     appbarToday: {
         display: "flex",
@@ -155,28 +150,20 @@ const AppBar = (props) => {
                     <div className={classes.appbarToday}>
                         <IconButton
                             aria-haspopup="true"
-                            color="inherit"
-                        >
-                            <TodayIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-haspopup="true"
-                            // onClick={(event) => handleRightPanelOpen(event, 2)}
                             aria-label="show 4 new messages"
                             color="inherit"
                         >
-                            <Badge badgeContent={4} color="secondary">
+                            <Badge badgeContent={3} color="secondary">
                                 <MailIcon />
                             </Badge>
                         </IconButton>
                     </div>
                     <IconButton
                         aria-haspopup="true"
-                        // onClick={(event) => handleRightPanelOpen(event, 1)}
                         aria-label="show 17 new notifications"
                         color="inherit"
                     >
-                        <Badge badgeContent={17} color="secondary">
+                        <Badge badgeContent={7} color="secondary">
                             <NotificationsIcon />
                         </Badge>
                     </IconButton>
@@ -188,10 +175,6 @@ const AppBar = (props) => {
 };
 
 AppBar.propTypes = {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
     container: PropTypes.any,
 };
 

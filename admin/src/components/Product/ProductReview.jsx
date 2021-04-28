@@ -1,6 +1,6 @@
 import React from 'react';
 import Rating from '@material-ui/lab/Rating';
-import { makeStyles, Typography, Grid, Box, withStyles } from "@material-ui/core";
+import { makeStyles, Typography, Box, withStyles } from "@material-ui/core";
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 const BorderLinearProgress = withStyles((theme) => ({
